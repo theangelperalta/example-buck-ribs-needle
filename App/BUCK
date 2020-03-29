@@ -1,0 +1,374 @@
+load("//Config:configs.bzl", "app_binary_configs", "library_configs", "watch_binary_configs", "message_binary_configs", "pretty", "info_plist_substitutions", "bundle_identifier", "DEVELOPMENT_LANGUAGE")
+load("//Config:buck_rule_macros.bzl", "apple_lib", "apple_test_lib", "apple_test_all")
+
+apple_asset_catalog(
+    name = "ExampleAppAssets",
+    visibility = ["//App:"],
+    app_icon = "AppIcon",
+    dirs = ["Assets.xcassets"],
+)
+
+app_tests = [
+    ":UnitTests",
+    ":UnitTestsWithHostApp",
+]
+
+ui_tests = [
+    ":XCUITests",
+]
+
+# This is a list of all of our first-party libraries that are depended upon (directly or transitively) by this application.
+# Every first-party library has an associated test target. We use this list to determine what test targets to run in CI.
+first_party_library_dependencies = [
+    # "//Libraries/ASwiftModule:ASwiftModule",
+    # "//Libraries/Cpp1:Cpp1",
+    # "//Libraries/Objc1:Objc1",
+    # "//Libraries/ObjcAndSwift:ObjcAndSwift",
+    # "//Libraries/SecondSwiftModule:SecondSwiftModule",
+    # "//Libraries/SwiftAndObjc:SwiftAndObjc",
+    # "//Libraries/SwiftReliesOnCXX:SwiftReliesOnCXX",
+    # "//Libraries/SwiftWithAssets:SwiftWithAssets",
+    # "//Libraries/SwiftWithMLModel:SwiftWithMLModel",
+    # "//Libraries/SwiftWithPrecompiledDependency:SwiftWithPrecompiledDependency",
+    # "//Libraries/YetAnotherSwiftModule:YetAnotherSwiftModule",
+]
+
+prebuilt_frameworks = [
+    # "//Carthage:AFNetworking",
+
+    # Hack to enable project generation to work for the Carthage BUCK file which otherwise only has `prebuilt_apple_framework`s.
+    # "//Carthage:CarthageProjectGeneratorHack",
+]
+
+# Build Phase scripts need to be added as dependencies.
+# These only get executed when building with Xcode, not Buck.
+build_phase_scripts = [
+    ":Hello_World",
+    ":Bye_World",
+]
+
+apple_library(
+    name = "ExampleAppLibrary",
+    visibility = [
+        "//App:",
+        "//App/...",
+    ],
+    configs = library_configs(),
+    swift_version = "4.0",
+    srcs = [
+        "Sources/ViewController.swift",
+        "Sources/AppDelegate.swift",
+        "Sources/LocalizationHelper.swift",
+    ],
+    tests = app_tests,
+    deps = [
+        # "//Pods:CryptoSwift",
+        # "//Pods:PromiseKit",
+
+        ":ExampleAppAssets",
+
+        # Resources
+        "//App/Resources:ExampleAppStringResources",
+        "//App/Resources:StoryboardResources",
+    ]
+    # + first_party_library_dependencies
+    + build_phase_scripts,
+)
+
+apple_binary(
+    name = "ExampleAppBinary",
+    visibility = [
+        "//App:",
+        "//App/...",
+    ],
+    configs = app_binary_configs("ExampleApp"),
+    swift_version = "4.0",
+    srcs = [
+        "BuckSupportFiles/Dummy.swift",
+    ],
+    deps = [
+        ":ExampleAppLibrary",
+    ],
+)
+
+# Defines a Build Phase script that gets executed before the "Compile Sources" step
+xcode_prebuild_script(
+    name = "Hello_World",
+    cmd = '"${SRCROOT}/../scripts/sample.sh"',
+    inputs = [],
+    outputs = [],
+    input_file_lists = [],
+    output_file_lists = [],
+)
+
+# Defines a Build Phase script that gets executed after the "Compile Sources" step
+xcode_postbuild_script(
+    name = "Bye_World",
+    cmd = 'echo Bye World!',
+    inputs = [],
+    outputs = [],
+    input_file_lists = [],
+    output_file_lists = [],
+)
+
+# This test bundles all unit test libraries into a single test target.
+# Test targets can be slow to create in CI; creating only one can save significant time.
+apple_test_all(
+    name = "ExampleAppCITests",
+    # libraries = first_party_library_dependencies,
+    additional_tests = app_tests,
+    prebuilt_frameworks = prebuilt_frameworks,
+)
+
+xcode_workspace_config(
+    name = "workspace",
+    workspace_name = "ExampleApp",
+    src_target = ":ExampleApp",
+    additional_scheme_actions = {
+        "Build": {
+            "PRE_SCHEME_ACTIONS": ["echo 'Started'"],
+            "POST_SCHEME_ACTIONS": ["echo 'Finished'"],
+        },
+    },
+    # Since `ui_tests` require a different test runner in CLI, but can be launched as-is from Xcode, we will place them as `extra_tests` on the Xcode workspace - where they make the most semantic sense.
+    extra_tests = ui_tests,
+    action_config_names = {"profile": "Profile"},
+)
+
+apple_bundle(
+    name = "ExampleApp",
+    visibility = [
+        "//App:",
+    ],
+    extension = "app",
+    binary = ":ExampleAppBinary",
+    product_name = "ExampleApp",
+    info_plist = "Info.plist",
+    info_plist_substitutions = info_plist_substitutions("ExampleApp"),
+    deps = [
+        # For "#watch", https://buckbuild.com/rule/apple_bundle.html#deps
+        # ":ExampleWatchApp#watch",
+        # ":ExampleMessageExtension"
+    ]
+    + prebuilt_frameworks,
+)
+
+apple_package(
+    name = "ExampleAppPackage",
+    bundle = ":ExampleApp",
+)
+
+### Watch App Begin ###
+# Define the watch app in the same BUCK file as the binary into which the watch app will be installed.
+# Xcode is finicky when it comes to how it embeds watch apps into main app bundles.  Watch apps are
+# built into the `watchos` build directory, but Xcode only knows to look for the watch app binary in the `watchos`
+# directory if the watch target is defined in the same `pbxproj` as the main app binary. If the key/value pair
+# on the watch target `SDKROOT = watchos;` is not in the same `pbxproj` as the target that defines the main app
+# binary, the Copy Files phase to embed the watch app and extension will search the `iphoneos` directory,
+# and fail the build on generated Xcode projects.
+
+# This is the code that runs on the iPhone and talks to the app running on the Watch.
+# apple_binary(
+#    name = "ExampleWatchAppExtensionBinary",
+#    srcs = glob([
+#        "WatchExtension/**/*.swift",
+#    ]),
+    # Without specifying the target, buck will provide a wrong one,
+    # which will cause compiler error.
+#    swift_compiler_flags = ["-target", "i386-apple-watchos4.0-simulator"],
+#    configs = watch_binary_configs("ExampleApp.WatchApp.Extension"),
+#    linker_flags = ["-e", "_WKExtensionMain"],
+#    frameworks = [
+#        "$SDKROOT/System/Library/Frameworks/CoreGraphics.framework",
+#        "$SDKROOT/System/Library/Frameworks/Foundation.framework",
+#         "$SDKROOT/System/Library/Frameworks/UIKit.framework",
+#        "$SDKROOT/System/Library/Frameworks/WatchConnectivity.framework",
+#        "$SDKROOT/System/Library/Frameworks/WatchKit.framework",
+#    ],
+#    headers = glob([
+#        "WatchExtension/**/*.h",
+#    ]),
+#)
+
+# apple_bundle(
+    # name = "ExampleWatchAppExtension",
+    # binary = ":ExampleWatchAppExtensionBinary",
+    # extension = "appex",
+    # info_plist = "WatchExtension/Info.plist",
+    # info_plist_substitutions = {
+        # "DEVELOPMENT_LANGUAGE": DEVELOPMENT_LANGUAGE,
+        # "EXECUTABLE_NAME": "ExampleWatchAppExtension",
+        # "PRODUCT_BUNDLE_IDENTIFIER": bundle_identifier("ExampleApp.WatchApp.Extension"),
+        # "WK_APP_BUNDLE_IDENTIFIER": bundle_identifier("ExampleApp.WatchApp"),
+        # "PRODUCT_NAME": "ExampleWatchAppExtension",
+        # "PRODUCT_MODULE_NAME": "ExampleWatchAppExtensionBinary",
+    # },
+    # xcode_product_type = "com.apple.product-type.watchkit2-extension",
+# )
+
+# This is the code that runs on the Watch.
+# apple_binary(
+    # name = "ExampleWatchAppBinary",
+    # configs = watch_binary_configs("ExampleApp.WatchApp")
+# )
+
+# apple_bundle(
+    # name = "ExampleWatchApp",
+    # binary = ":ExampleWatchAppBinary",
+    # visibility = [
+        # "//App:",
+    # ],
+    # extension = "app",
+    # info_plist = "WatchApplication/Info.plist",
+    # info_plist_substitutions = {
+        # "DEVELOPMENT_LANGUAGE": DEVELOPMENT_LANGUAGE,
+        # "EXECUTABLE_NAME": "ExampleWatchApp",
+        # "PRODUCT_BUNDLE_IDENTIFIER": bundle_identifier("ExampleApp.WatchApp"),
+        # "WK_COMPANION_APP_BUNDLE_IDENTIFIER": bundle_identifier("ExampleApp"),
+        # "PRODUCT_NAME": "ExampleWatchApp",
+    # },
+    # xcode_product_type = "com.apple.product-type.application.watchapp2",
+    # deps = [
+        # ":ExampleWatchAppExtension",
+        # ":ExampleWatchAppResources",
+    # ],
+# )
+
+# apple_resource(
+    # name = "ExampleWatchAppResources",
+    # dirs = [],
+    # files = glob(["WatchApplication/**/*.storyboard"])
+# )
+### Watch App End ###
+
+### iMessage Extension Begin ###
+# It is possible for an iMessage extension to be declared in a separate BUCK file.
+# Declaring the iMessage extension in a separate `BUCK` file would result in that code living in a
+# separate `pbxproj` file in the Buck-generate Xcode projects. Due to our learnings from the watch
+# app (described above) we think it's safer to keep the iMessage extension in the same `BUCK` file
+# that declares the main app bundle.
+
+# apple_binary(
+    # name = "ExampleMessageExtensionBinary",
+    # srcs = glob([
+        # "MessageExtension/**/*.swift",
+    # ]),
+    # configs = message_binary_configs("ExampleApp.MessageExtension"),
+
+    # "-e MessageExtension") tell linker this binary is app extension, so it won't fail due to missing _main
+    # "-Xlinker -rpath -Xlinker @executable_path/../../Frameworks" tells the executable binary to
+    # look for frameworks in ExampleApp.app/Frameworks instead of PlugIns, so that we don't need to have
+    # the libSwift*.dylib in ExampleApp.app/PlugIns/*.appex/Frameworks
+    # linker_flags = [
+        # "-e",
+        # "_NSExtensionMain",
+        # "-Xlinker",
+        # "-rpath",
+        # "-Xlinker",
+        # "@executable_path/../../Frameworks",
+    # ],
+# )
+
+# apple_bundle(
+    # name = "ExampleMessageExtension",
+    # binary = ":ExampleMessageExtensionBinary",
+    # extension = "appex",
+    # info_plist = "MessageExtension/Info.plist",
+    # info_plist_substitutions = {
+        # "DEVELOPMENT_LANGUAGE": DEVELOPMENT_LANGUAGE,
+        # "EXECUTABLE_NAME": "ExampleMessageExtension",
+        # "PRODUCT_BUNDLE_IDENTIFIER": bundle_identifier("ExampleApp.MessageExtension"),
+        # "PRODUCT_NAME": "ExampleMessageExtension",
+        # "PRODUCT_MODULE_NAME": "ExampleMessageExtensionBinary",
+    # },
+    # deps = [
+        # ":ExampleMessageExtensionResources",
+    # ],
+    # xcode_product_type = "com.apple.product-type.app-extension.messages",
+# )
+
+# apple_resource(
+    # name = "ExampleMessageExtensionResources",
+    # dirs = [],
+    # files = glob(["MessageExtension/**/*.storyboard"])
+# )
+### iMessage Extension End ###
+
+### Tests Begin ###
+
+apple_test_lib(
+    name = "UnitTests",
+    srcs = glob([
+        "UnitTests/*.swift",
+    ]),
+    deps = [
+        ":ExampleAppLibrary",
+    ]
+    + prebuilt_frameworks,
+)
+
+apple_test_lib(
+    name = "UnitTestsWithHostApp",
+    run_test_separately = True,
+    test_host_app = ":ExampleApp",
+    srcs = glob([
+        "UnitTestsWithHostApp/*.swift",
+    ]),
+    deps = [
+        ":ExampleAppLibrary",
+    ],
+)
+
+# This test suite cannot be packaged with other tests due to a dependency on `fbxctest` instead of `xctool`.
+apple_test_lib(
+    name = "XCUITests",
+    destination_specifier = {
+        "name": "iPhone 8",
+    },
+    run_test_separately = True,
+    # The `test_host_app` is launched first in the Simulator and needs to be an `apple_bundle` that is distinct from `ui_test_target_app`.
+    test_host_app = ":XCUITestsHostApp",
+    srcs = glob([
+        "XCUITests/*.swift",
+    ]),
+    is_ui_test = True,
+    # The `ui_test_target_app` field is not mentioned in Buck's official documentation, but it appears in its XCUITest fixtures.
+    # https://github.com/facebook/buck/blob/master/test/com/facebook/buck/apple/testdata/apple_test_xcuitest/BUCK.fixture#L66
+    ui_test_target_app = ":ExampleApp",
+    labels = ['ui'],
+    deps = [
+        # "//Libraries/ASwiftModule:ASwiftModule",
+    ],
+    frameworks = [
+        "$PLATFORM_DIR/Developer/Library/Frameworks/XCTest.framework",
+        "$SDKROOT/System/Library/Frameworks/Foundation.framework",
+        "$SDKROOT/System/Library/Frameworks/UIKit.framework",
+    ],
+)
+
+# A very thin host app to enable running :XCUITests
+apple_bundle(
+    name = "XCUITestsHostApp",
+    visibility = [
+        "//App:XCUITests",
+    ],
+    extension = "app",
+    binary = ":XCUITestsHostAppBinary",
+    product_name = "XCUITestsHostApp",
+    info_plist = "Info.plist",
+    info_plist_substitutions = info_plist_substitutions("XCUITestsHostApp"),
+)
+
+apple_binary(
+    name = "XCUITestsHostAppBinary",
+    visibility = [
+        "//App:XCUITestsHostApp",
+    ],
+    configs = app_binary_configs("XCUITestsHostAppBinary"),
+    swift_version = "4.0",
+    srcs = [
+        "BuckSupportFiles/DummyAppDelegate.swift",
+    ],
+)
+
+### Tests End ###
