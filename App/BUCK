@@ -20,6 +20,7 @@ ui_tests = [
 # This is a list of all of our first-party libraries that are depended upon (directly or transitively) by this application.
 # Every first-party library has an associated test target. We use this list to determine what test targets to run in CI.
 first_party_library_dependencies = [
+    "//Libraries/TTTUtilties:TTTUtilties",
     # "//Libraries/ASwiftModule:ASwiftModule",
     # "//Libraries/Cpp1:Cpp1",
     # "//Libraries/Objc1:Objc1",
@@ -58,7 +59,6 @@ apple_library(
     srcs = [
         "Sources/ViewController.swift",
         "Sources/AppDelegate.swift",
-        "Sources/LocalizationHelper.swift",
     ],
     tests = app_tests,
     deps = [
@@ -71,7 +71,7 @@ apple_library(
         "//App/Resources:ExampleAppStringResources",
         "//App/Resources:StoryboardResources",
     ]
-    # + first_party_library_dependencies
+    + first_party_library_dependencies
     + build_phase_scripts,
 )
 

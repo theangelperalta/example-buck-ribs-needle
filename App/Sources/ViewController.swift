@@ -11,6 +11,7 @@
 //import SwiftWithMLModel
 //import SwiftWithPrecompiledDependency
 //import YetAnotherSwiftModule
+import TTTUtilties
 import UIKit
 
 public let testVar = "SampleValue"
@@ -28,7 +29,7 @@ class ViewController: UIViewController {
     self.view = view
 
     let label = UILabel()
-    label.text = localizedString("Hello, world. It's Ali D.", "Text on main view controller")
+    label.text = localizedString("Hello, world", "Text on main view controller")
     self.view.addSubview(label)
     label.sizeToFit()
     label.center = self.view.center

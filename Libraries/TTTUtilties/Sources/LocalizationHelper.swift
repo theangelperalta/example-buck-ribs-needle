@@ -3,6 +3,6 @@
 
 import Foundation
 
-func localizedString(_ key: String, _ comment: String) -> String {
+public func localizedString(_ key: String, _ comment: String) -> String {
   return NSLocalizedString(key, tableName: "ExampleApp", comment: comment)
 }
