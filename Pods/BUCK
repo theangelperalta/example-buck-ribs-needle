@@ -1,0 +1,96 @@
+load("//Config:buck_rule_macros.bzl", "apple_third_party_lib", "apple_cxx_third_party_library")
+
+apple_third_party_lib(
+    name = "NeedleFoundation",
+    srcs = glob([
+        "NeedleFoundation/**/*.swift",
+    ]),
+)
+
+apple_third_party_lib(
+    name = "CryptoSwift",
+    srcs = glob([
+        "CryptoSwift/**/*.swift",
+    ]),
+)
+
+apple_third_party_lib(
+    name = "PromiseKit",
+    visibility = ["PUBLIC"],
+    exported_headers = glob([
+        "PromiseKit/**/*.h",
+    # We are excluding this header because a) it is not public and b) `PromiseKit` does not
+    # consider it to be a source in its `podspec`: https://github.com/mxcl/PromiseKit/blob/a20df65b74b3eec290e524abb9839412542328b6/PromiseKit.podspec#L114
+    ], exclude = [
+        "PromiseKit/AnyPromise+Private.h",
+    ]),
+    srcs = glob([
+        "PromiseKit/**/*.m",
+        "PromiseKit/**/*.swift",
+    # We are excluding the below sources since `PromiseKit` does not consider them sources in its
+    # `podspec`: https://github.com/mxcl/PromiseKit/blob/a20df65b74b3eec290e524abb9839412542328b6/PromiseKit.podspec#L114
+    ], exclude = [
+        "PromiseKit/Sources/PMKCallVariadicBlock.m",
+        "PromiseKit/Sources/NSMethodSignatureForBlock.m",
+    ]),
+)
+
+apple_cxx_third_party_library(
+    name = "Bugsnag",
+    exported_headers = glob([
+        "Bugsnag/**/BSG_KSCrashReportWriter.h",
+        "Bugsnag/**/Bugsnag.h",
+        "Bugsnag/**/BugsnagBreadcrumb.h",
+        "Bugsnag/**/BugsnagConfiguration.h",
+        "Bugsnag/**/BugsnagCrashReport.h",
+        "Bugsnag/**/BugsnagMetaData.h",
+    ]),
+    headers = glob([
+        "Bugsnag/**/*.h",
+    ]),
+    srcs = glob([
+        "Bugsnag/**/*.c",
+        "Bugsnag/**/*.m",
+        "Bugsnag/**/*.mm",
+    ]),
+)
+
+apple_third_party_lib(
+    name = "Quick",
+    swift_version = "5",
+    visibility = ["PUBLIC"],
+    compiler_flags = ["-fapplication-extension"],
+    swift_compiler_flags = ["-application-extension"],
+    exported_headers = glob([
+        "Quick/**/*.h",
+    ]),
+    srcs = glob([
+        "Quick/**/*.m",
+        "Quick/**/*.swift",
+    ]),
+    frameworks = [
+        "$PLATFORM_DIR/Developer/Library/Frameworks/XCTest.framework",
+    ]
+)
+ 
+apple_third_party_lib(
+    name = 'Nimble',
+    exported_headers = glob([
+        "Nimble/**/*.h",
+    ], 
+    exclude = [
+        "Carthage/Checkouts/CwlPreconditionTesting/Sources/CwlPreconditionTesting/Posix/CwlPreconditionTesting_POSIX.h"
+    ]),
+    srcs = glob([
+        "Nimble/**/*.swift",
+        "Nimble/**/*.m",
+        "Nimble/**/*.c"
+    ], exclude = [
+        "Carthage/Checkouts/CwlPreconditionTesting/Sources/CwlPreconditionTesting/CwlCatchBadInstructionPosix.swift"
+    ]),
+    compiler_flags = ["-fapplication-extension", "-weak-lswiftXCTest", "-Xlinker", "-no_application_extension"],
+    swift_compiler_flags = ["-DPRODUCT_NAME=Nimble/Nimble", "-application-extension"],
+    frameworks = [
+      '$PLATFORM_DIR/Developer/Library/Frameworks/XCTest.framework'
+    ]
+)

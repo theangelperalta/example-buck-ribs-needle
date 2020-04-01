@@ -36,9 +36,12 @@ first_party_library_dependencies = [
 
 prebuilt_frameworks = [
     # "//Carthage:AFNetworking",
+    "//Carthage:RIBs",
+    "//Carthage:RxSwift",
+    "//Pods:NeedleFoundation",
 
     # Hack to enable project generation to work for the Carthage BUCK file which otherwise only has `prebuilt_apple_framework`s.
-    # "//Carthage:CarthageProjectGeneratorHack",
+    "//Carthage:CarthageProjectGeneratorHack",
 ]
 
 # Build Phase scripts need to be added as dependencies.
@@ -64,6 +67,9 @@ apple_library(
     deps = [
         # "//Pods:CryptoSwift",
         # "//Pods:PromiseKit",
+        "//Carthage:RIBs",
+        "//Carthage:RxSwift",
+        "//Pods:NeedleFoundation",
 
         ":ExampleAppAssets",
 

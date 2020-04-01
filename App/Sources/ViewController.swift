@@ -11,6 +11,8 @@
 //import SwiftWithMLModel
 //import SwiftWithPrecompiledDependency
 //import YetAnotherSwiftModule
+import RIBs
+import NeedleFoundation
 import TTTUtilties
 import UIKit
 

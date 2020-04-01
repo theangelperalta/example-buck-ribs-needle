@@ -1,0 +1,2 @@
+github "uber/RIBs" ~> 0.9
+github "https://github.com/uber/needle.git" ~> 0.13
