@@ -12,4 +12,5 @@ target 'Example-Buck-RIBS-Needle' do
   pod 'Quick', '2.1.0'
   pod 'Nimble', '8.0.2'
   pod 'NeedleFoundation', '0.13.0'
+  pod 'SnapKit', '~> 4.0.0'
 end

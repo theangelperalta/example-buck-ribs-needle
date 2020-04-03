@@ -8,6 +8,13 @@ apple_third_party_lib(
 )
 
 apple_third_party_lib(
+    name = "SnapKit",
+    srcs = glob([
+        "SnapKit/**/*.swift",
+    ]),
+)
+
+apple_third_party_lib(
     name = "CryptoSwift",
     srcs = glob([
         "CryptoSwift/**/*.swift",

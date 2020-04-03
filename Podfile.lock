@@ -7,6 +7,7 @@ PODS:
     - PromiseKit/CorePromise
   - PromiseKit/CorePromise (6.1.1)
   - Quick (2.1.0)
+  - SnapKit (4.0.1)
 
 DEPENDENCIES:
   - Bugsnag
@@ -16,6 +17,7 @@ DEPENDENCIES:
   - PromiseKit/CoreLocation (= 6.1.1)
   - PromiseKit/CorePromise (= 6.1.1)
   - Quick (= 2.1.0)
+  - SnapKit (~> 4.0.0)
 
 SPEC REPOS:
   trunk:
@@ -25,6 +27,7 @@ SPEC REPOS:
     - Nimble
     - PromiseKit
     - Quick
+    - SnapKit
 
 SPEC CHECKSUMS:
   Bugsnag: 1f33ee5b55bc4b131a30e0fe6db714da9c6609f6
@@ -33,7 +36,8 @@ SPEC CHECKSUMS:
   Nimble: 622629381bda1dd5678162f21f1368cec7cbba60
   PromiseKit: 876f433b87c970f020e04e35dbe68ab21d240498
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
+  SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
 
-PODFILE CHECKSUM: 8093f7b1cda60bbf1984a0e676bca1c04735e1b0
+PODFILE CHECKSUM: 63ae721a75f037ea58512b4a564cef4d0672fea4
 
 COCOAPODS: 1.9.1

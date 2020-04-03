@@ -2,7 +2,7 @@ load("//Config:configs.bzl", "app_binary_configs", "library_configs", "watch_bin
 load("//Config:buck_rule_macros.bzl", "apple_lib", "apple_test_lib", "apple_test_all")
 
 apple_asset_catalog(
-    name = "ExampleAppAssets",
+    name = "TicTacToeAppAssets",
     visibility = ["//App:"],
     app_icon = "AppIcon",
     dirs = ["Assets.xcassets"],
@@ -39,6 +39,7 @@ prebuilt_frameworks = [
     "//Carthage:RIBs",
     "//Carthage:RxSwift",
     "//Pods:NeedleFoundation",
+    "//Pods:SnapKit",
 
     # Hack to enable project generation to work for the Carthage BUCK file which otherwise only has `prebuilt_apple_framework`s.
     "//Carthage:CarthageProjectGeneratorHack",
@@ -52,17 +53,19 @@ build_phase_scripts = [
 ]
 
 apple_library(
-    name = "ExampleAppLibrary",
+    name = "TicTacToeCore",
     visibility = [
         "//App:",
         "//App/...",
     ],
     configs = library_configs(),
     swift_version = "4.0",
-    srcs = [
-        "Sources/ViewController.swift",
-        "Sources/AppDelegate.swift",
-    ],
+    srcs = glob([
+        "AppStart/*",
+        "Root/*",
+        "LoggedIn/*",
+        "LoggedOut/*",
+    ]),
     tests = app_tests,
     deps = [
         # "//Pods:CryptoSwift",
@@ -70,11 +73,11 @@ apple_library(
         "//Carthage:RIBs",
         "//Carthage:RxSwift",
         "//Pods:NeedleFoundation",
-
-        ":ExampleAppAssets",
+        "//Pods:SnapKit",
+        ":TicTacToeAppAssets",
 
         # Resources
-        "//App/Resources:ExampleAppStringResources",
+        "//App/Resources:TicTacToeAppStringResources",
         "//App/Resources:StoryboardResources",
     ]
     + first_party_library_dependencies
@@ -82,18 +85,18 @@ apple_library(
 )
 
 apple_binary(
-    name = "ExampleAppBinary",
+    name = "TicTacToeAppBinary",
     visibility = [
         "//App:",
         "//App/...",
     ],
-    configs = app_binary_configs("ExampleApp"),
+    configs = app_binary_configs("TicTacToeApp"),
     swift_version = "4.0",
     srcs = [
         "BuckSupportFiles/Dummy.swift",
     ],
     deps = [
-        ":ExampleAppLibrary",
+        ":TicTacToeCore",
     ],
 )
 
@@ -120,7 +123,7 @@ xcode_postbuild_script(
 # This test bundles all unit test libraries into a single test target.
 # Test targets can be slow to create in CI; creating only one can save significant time.
 apple_test_all(
-    name = "ExampleAppCITests",
+    name = "TicTacToeAppCITests",
     # libraries = first_party_library_dependencies,
     additional_tests = app_tests,
     prebuilt_frameworks = prebuilt_frameworks,
@@ -128,8 +131,8 @@ apple_test_all(
 
 xcode_workspace_config(
     name = "workspace",
-    workspace_name = "ExampleApp",
-    src_target = ":ExampleApp",
+    workspace_name = "TicTacToeApp",
+    src_target = ":TicTacToeApp",
     additional_scheme_actions = {
         "Build": {
             "PRE_SCHEME_ACTIONS": ["echo 'Started'"],
@@ -142,15 +145,15 @@ xcode_workspace_config(
 )
 
 apple_bundle(
-    name = "ExampleApp",
+    name = "TicTacToeApp",
     visibility = [
         "//App:",
     ],
     extension = "app",
-    binary = ":ExampleAppBinary",
-    product_name = "ExampleApp",
+    binary = ":TicTacToeAppBinary",
+    product_name = "TicTacToeApp",
     info_plist = "Info.plist",
-    info_plist_substitutions = info_plist_substitutions("ExampleApp"),
+    info_plist_substitutions = info_plist_substitutions("TicTacToeApp"),
     deps = [
         # For "#watch", https://buckbuild.com/rule/apple_bundle.html#deps
         # ":ExampleWatchApp#watch",
@@ -160,8 +163,8 @@ apple_bundle(
 )
 
 apple_package(
-    name = "ExampleAppPackage",
-    bundle = ":ExampleApp",
+    name = "TicTacToeAppPackage",
+    bundle = ":TicTacToeApp",
 )
 
 ### Watch App Begin ###
@@ -182,7 +185,7 @@ apple_package(
     # Without specifying the target, buck will provide a wrong one,
     # which will cause compiler error.
 #    swift_compiler_flags = ["-target", "i386-apple-watchos4.0-simulator"],
-#    configs = watch_binary_configs("ExampleApp.WatchApp.Extension"),
+#    configs = watch_binary_configs("TicTacToeApp.WatchApp.Extension"),
 #    linker_flags = ["-e", "_WKExtensionMain"],
 #    frameworks = [
 #        "$SDKROOT/System/Library/Frameworks/CoreGraphics.framework",
@@ -204,8 +207,8 @@ apple_package(
     # info_plist_substitutions = {
         # "DEVELOPMENT_LANGUAGE": DEVELOPMENT_LANGUAGE,
         # "EXECUTABLE_NAME": "ExampleWatchAppExtension",
-        # "PRODUCT_BUNDLE_IDENTIFIER": bundle_identifier("ExampleApp.WatchApp.Extension"),
-        # "WK_APP_BUNDLE_IDENTIFIER": bundle_identifier("ExampleApp.WatchApp"),
+        # "PRODUCT_BUNDLE_IDENTIFIER": bundle_identifier("TicTacToeApp.WatchApp.Extension"),
+        # "WK_APP_BUNDLE_IDENTIFIER": bundle_identifier("TicTacToeApp.WatchApp"),
         # "PRODUCT_NAME": "ExampleWatchAppExtension",
         # "PRODUCT_MODULE_NAME": "ExampleWatchAppExtensionBinary",
     # },
@@ -215,7 +218,7 @@ apple_package(
 # This is the code that runs on the Watch.
 # apple_binary(
     # name = "ExampleWatchAppBinary",
-    # configs = watch_binary_configs("ExampleApp.WatchApp")
+    # configs = watch_binary_configs("TicTacToeApp.WatchApp")
 # )
 
 # apple_bundle(
@@ -229,8 +232,8 @@ apple_package(
     # info_plist_substitutions = {
         # "DEVELOPMENT_LANGUAGE": DEVELOPMENT_LANGUAGE,
         # "EXECUTABLE_NAME": "ExampleWatchApp",
-        # "PRODUCT_BUNDLE_IDENTIFIER": bundle_identifier("ExampleApp.WatchApp"),
-        # "WK_COMPANION_APP_BUNDLE_IDENTIFIER": bundle_identifier("ExampleApp"),
+        # "PRODUCT_BUNDLE_IDENTIFIER": bundle_identifier("TicTacToeApp.WatchApp"),
+        # "WK_COMPANION_APP_BUNDLE_IDENTIFIER": bundle_identifier("TicTacToeApp"),
         # "PRODUCT_NAME": "ExampleWatchApp",
     # },
     # xcode_product_type = "com.apple.product-type.application.watchapp2",
@@ -259,12 +262,12 @@ apple_package(
     # srcs = glob([
         # "MessageExtension/**/*.swift",
     # ]),
-    # configs = message_binary_configs("ExampleApp.MessageExtension"),
+    # configs = message_binary_configs("TicTacToeApp.MessageExtension"),
 
     # "-e MessageExtension") tell linker this binary is app extension, so it won't fail due to missing _main
     # "-Xlinker -rpath -Xlinker @executable_path/../../Frameworks" tells the executable binary to
-    # look for frameworks in ExampleApp.app/Frameworks instead of PlugIns, so that we don't need to have
-    # the libSwift*.dylib in ExampleApp.app/PlugIns/*.appex/Frameworks
+    # look for frameworks in TicTacToeApp.app/Frameworks instead of PlugIns, so that we don't need to have
+    # the libSwift*.dylib in TicTacToeApp.app/PlugIns/*.appex/Frameworks
     # linker_flags = [
         # "-e",
         # "_NSExtensionMain",
@@ -283,7 +286,7 @@ apple_package(
     # info_plist_substitutions = {
         # "DEVELOPMENT_LANGUAGE": DEVELOPMENT_LANGUAGE,
         # "EXECUTABLE_NAME": "ExampleMessageExtension",
-        # "PRODUCT_BUNDLE_IDENTIFIER": bundle_identifier("ExampleApp.MessageExtension"),
+        # "PRODUCT_BUNDLE_IDENTIFIER": bundle_identifier("TicTacToeApp.MessageExtension"),
         # "PRODUCT_NAME": "ExampleMessageExtension",
         # "PRODUCT_MODULE_NAME": "ExampleMessageExtensionBinary",
     # },
@@ -308,7 +311,7 @@ apple_test_lib(
         "UnitTests/*.swift",
     ]),
     deps = [
-        ":ExampleAppLibrary",
+        ":TicTacToeCore",
     ]
     + prebuilt_frameworks,
 )
@@ -316,12 +319,12 @@ apple_test_lib(
 apple_test_lib(
     name = "UnitTestsWithHostApp",
     run_test_separately = True,
-    test_host_app = ":ExampleApp",
+    test_host_app = ":TicTacToeApp",
     srcs = glob([
         "UnitTestsWithHostApp/*.swift",
     ]),
     deps = [
-        ":ExampleAppLibrary",
+        ":TicTacToeCore",
     ],
 )
 
@@ -340,7 +343,7 @@ apple_test_lib(
     is_ui_test = True,
     # The `ui_test_target_app` field is not mentioned in Buck's official documentation, but it appears in its XCUITest fixtures.
     # https://github.com/facebook/buck/blob/master/test/com/facebook/buck/apple/testdata/apple_test_xcuitest/BUCK.fixture#L66
-    ui_test_target_app = ":ExampleApp",
+    ui_test_target_app = ":TicTacToeApp",
     labels = ['ui'],
     deps = [
         # "//Libraries/ASwiftModule:ASwiftModule",
