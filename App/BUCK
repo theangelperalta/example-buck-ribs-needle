@@ -21,6 +21,7 @@ ui_tests = [
 # Every first-party library has an associated test target. We use this list to determine what test targets to run in CI.
 first_party_library_dependencies = [
     "//Libraries/TTTUtilties:TTTUtilties",
+    "//Libraries/MissingNeedleCode:MissingNeedleCode",
     # "//Libraries/ASwiftModule:ASwiftModule",
     # "//Libraries/Cpp1:Cpp1",
     # "//Libraries/Objc1:Objc1",
@@ -48,6 +49,7 @@ prebuilt_frameworks = [
 # Build Phase scripts need to be added as dependencies.
 # These only get executed when building with Xcode, not Buck.
 build_phase_scripts = [
+    ":NeedleGeneration",
     ":Hello_World",
     ":Bye_World",
 ]
@@ -61,18 +63,23 @@ apple_library(
     configs = library_configs(),
     swift_version = "4.0",
     srcs = glob([
-        "AppStart/*",
-        "Root/*",
-        "LoggedIn/*",
-        "LoggedOut/*",
-    ]),
+        "Sources/AppStart/*",
+        "Sources/Root/*",
+        "Sources/LoggedIn/*",
+        "Sources/LoggedOut/*",
+        "Sources/TicTacToe/*",
+        "Sources/OffGame/*",
+        "NeedleGenerated/*.swift",
+    ]), # + ["//App/NeedleGenerated:Needle"],
     tests = app_tests,
     deps = [
         # "//Pods:CryptoSwift",
         # "//Pods:PromiseKit",
         "//Carthage:RIBs",
         "//Carthage:RxSwift",
-        "//Pods:NeedleFoundation",
+        "//Carthage:RxCocoa",
+        "//Carthage:NeedleFoundation",
+        #"//Pods:NeedleFoundation",
         "//Pods:SnapKit",
         ":TicTacToeAppAssets",
 
@@ -98,6 +105,17 @@ apple_binary(
     deps = [
         ":TicTacToeCore",
     ],
+)
+
+
+# Defines a Build Phase script that gets executed before the "Compile Sources" step
+xcode_prebuild_script(
+    name = "NeedleGeneration",
+    cmd = '"${SRCROOT}/../scripts/needle-gen.sh"',
+    inputs = [],
+    outputs = [],
+    input_file_lists = [],
+    output_file_lists = [],
 )
 
 # Defines a Build Phase script that gets executed before the "Compile Sources" step

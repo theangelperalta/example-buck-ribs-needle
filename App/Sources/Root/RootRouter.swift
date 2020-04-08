@@ -15,6 +15,7 @@
 //
 
 import RIBs
+import NeedleFoundation
 
 protocol RootInteractable: Interactable, LoggedOutListener, LoggedInListener {
     var router: RootRouting? { get set }

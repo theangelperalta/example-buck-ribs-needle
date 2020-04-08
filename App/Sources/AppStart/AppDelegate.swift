@@ -15,6 +15,7 @@
 //
 
 import RIBs
+import NeedleFoundation
 import RxSwift
 import UIKit
 
@@ -33,10 +34,13 @@ public class AppDelegate: UIResponder, UIApplicationDelegate {
     ///   the possible keys in this dictionary and how to handle them, see Launch Options Keys.
     /// - returns: false if the app cannot handle the URL resource or continue a user activity, otherwise return true.
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        registerProviderFactories()
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
 
-        let launchRouter = RootBuilder(dependency: AppComponent()).build()
+        let launchRouter = RootBuilder {
+            RootComponent()
+        }.build()
         self.launchRouter = launchRouter
         launchRouter.launch(from: window)
 

@@ -1,2 +1,3 @@
 github "uber/RIBs" ~> 0.9
-github "https://github.com/uber/needle.git" ~> 0.13
+# github "https://github.com/uber/needle.git" ~> 0.13
+github "brentleyjones/needle" "fix-generator-for-swift-5.2"

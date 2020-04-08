@@ -15,6 +15,13 @@ prebuilt_apple_framework(
 )
 
 prebuilt_apple_framework(
+    name = "RxCocoa",
+    framework = "Build/iOS/RxCocoa.framework",
+    preferred_linkage = "shared",
+    visibility = ["PUBLIC"],
+)
+
+prebuilt_apple_framework(
     name = "NeedleFoundation",
     framework = "Build/iOS/NeedleFoundation.framework",
     preferred_linkage = "shared",
