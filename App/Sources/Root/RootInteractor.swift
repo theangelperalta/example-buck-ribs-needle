@@ -35,10 +35,13 @@ final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteract
     weak var router: RootRouting?
 
     weak var listener: RootListener?
+    
+    private let mutablePlayersStream: MutablePlayersStream
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
-    override init(presenter: RootPresentable) {
+    init(presenter: RootPresentable, mutablePlayersStream: MutablePlayersStream) {
+        self.mutablePlayersStream = mutablePlayersStream
         super.init(presenter: presenter)
         presenter.listener = self
     }
@@ -56,6 +59,7 @@ final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteract
     // MARK: - LoggedOutListener
 
     func didLogin(withPlayer1Name player1Name: String, player2Name: String) {
+        mutablePlayersStream.update(player1: player1Name, player2: player2Name)
         router?.routeToLoggedIn(withPlayer1Name: player1Name, player2Name: player2Name)
     }
 }

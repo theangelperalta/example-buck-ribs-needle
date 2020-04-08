@@ -19,7 +19,7 @@ class RootComponent: BootstrapComponent {
     }
 
     var rootViewController: RootViewController {
-        return RootViewController()
+        return shared { RootViewController() }
     }
     
     var loggedInViewController: LoggedInViewControllable {
@@ -27,7 +27,7 @@ class RootComponent: BootstrapComponent {
     }
     
     var rootInteractor: RootInteractor {
-        return RootInteractor(presenter: rootViewController)
+        return RootInteractor(presenter: rootViewController, mutablePlayersStream: mutablePlayersStream)
     }
 
     var loggedOutComponent: LoggedOutComponent {
