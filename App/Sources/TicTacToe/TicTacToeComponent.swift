@@ -5,13 +5,13 @@
 //  Created by Angel Cortez on 4/7/20.
 //
 
-import NeedleFoundation
+import RIBs
 
 protocol TicTacToeDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
-    var player1: String { get }
-    var player2: String { get }
+    var player1Name: String { get }
+    var player2Name: String { get }
 }
 
 final class TicTacToeComponent: Component<TicTacToeDependency> {

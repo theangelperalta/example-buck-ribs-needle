@@ -14,8 +14,8 @@
 //  limitations under the License.
 //
 
-import NeedleFoundation
-import MissingNeedleCode
+import RIBs
+
 // MARK: - Builder
 
 protocol LoggedInBuildable: Buildable {
@@ -24,22 +24,28 @@ protocol LoggedInBuildable: Buildable {
                player2Name: String) -> LoggedInRouting
 }
 
-final class LoggedInBuilder: NeedleBuilder<LoggedInComponent>, LoggedInBuildable {
+final class LoggedInBuilder: ComponentizedBuilder<LoggedInComponent, LoggedInRouting, LoggedInListener, (String, String)>, LoggedInBuildable {
 
     func build(withListener listener: LoggedInListener, player1Name: String, player2Name: String) -> LoggedInRouting {
-        let component = componentBuilder()
-        let interactor = LoggedInInteractor(mutableScoreStream: component.mutableScoreStream)
+        let (component, router) = build(withDynamicBuildDependency: listener, dynamicComponentDependency: (player1Name, player2Name))
+//        return (router, component.interactor)
+        return router
+    }
+    
+    override func build(with component: LoggedInComponent, _ listener: LoggedInListener) -> LoggedInRouting {
+        let interactor = component.interactor
         interactor.listener = listener
-
         let offGameBuilder = OffGameBuilder {
-            return component.offGameComponent
+            component.offGameComponent
         }
-        let ticTacToeBuilder = TicTacToeBuilder {
+        let ticTacBuilder = TicTacToeBuilder {
             component.ticTacToeComponent
         }
-        return LoggedInRouter(interactor: interactor,
-                              viewController: component.loggedInViewController,
-                              offGameBuilder: offGameBuilder,
-                              ticTacToeBuilder: ticTacToeBuilder)
+        let router = LoggedInRouter(interactor: interactor,
+                                    viewController: component.viewController,
+                                    offGameBuilder: offGameBuilder,
+                                    ticTacToeBuilder: ticTacBuilder
+        )
+        return router
     }
 }

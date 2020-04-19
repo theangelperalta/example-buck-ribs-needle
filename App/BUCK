@@ -21,7 +21,6 @@ ui_tests = [
 # Every first-party library has an associated test target. We use this list to determine what test targets to run in CI.
 first_party_library_dependencies = [
     "//Libraries/TTTUtilties:TTTUtilties",
-    "//Libraries/MissingNeedleCode:MissingNeedleCode",
     # "//Libraries/ASwiftModule:ASwiftModule",
     # "//Libraries/Cpp1:Cpp1",
     # "//Libraries/Objc1:Objc1",
@@ -37,10 +36,10 @@ first_party_library_dependencies = [
 
 prebuilt_frameworks = [
     # "//Carthage:AFNetworking",
-    "//Carthage:RIBs",
-    "//Carthage:RxSwift",
-    "//Pods:NeedleFoundation",
-    "//Pods:SnapKit",
+    # "//Carthage:RIBs",
+    # "//Carthage:RxSwift",
+    # "//Carthage:RxCocoa",
+    # "//Carthage:NeedleFoundation",
 
     # Hack to enable project generation to work for the Carthage BUCK file which otherwise only has `prebuilt_apple_framework`s.
     "//Carthage:CarthageProjectGeneratorHack",
@@ -75,12 +74,11 @@ apple_library(
     deps = [
         # "//Pods:CryptoSwift",
         # "//Pods:PromiseKit",
-        "//Carthage:RIBs",
-        "//Carthage:RxSwift",
-        "//Carthage:RxCocoa",
-        "//Carthage:NeedleFoundation",
-        #"//Pods:NeedleFoundation",
+        "//Pods:NeedleFoundation",
+        "//Pods:RIBs",
         "//Pods:SnapKit",
+        "//Pods:RxCocoa",
+        "//Pods:RxSwift",
         ":TicTacToeAppAssets",
 
         # Resources
@@ -88,7 +86,8 @@ apple_library(
         "//App/Resources:StoryboardResources",
     ]
     + first_party_library_dependencies
-    + build_phase_scripts,
+    + build_phase_scripts
+    + prebuilt_frameworks,
 )
 
 apple_binary(

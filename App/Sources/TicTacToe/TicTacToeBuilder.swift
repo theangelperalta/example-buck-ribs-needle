@@ -14,7 +14,7 @@
 //  limitations under the License.
 //
 
-import MissingNeedleCode
+import RIBs
 
 // MARK: - Builder
 
@@ -22,13 +22,16 @@ protocol TicTacToeBuildable: Buildable {
     func build(withListener listener: TicTacToeListener) -> TicTacToeRouting
 }
 
-final class TicTacToeBuilder: NeedleBuilder<TicTacToeComponent>, TicTacToeBuildable {
-
-    func build(withListener listener: TicTacToeListener) -> TicTacToeRouting {
-        let component = componentBuilder()
+final class TicTacToeBuilder: ComponentizedBuilder<TicTacToeComponent, TicTacToeRouting, TicTacToeListener, Void>, TicTacToeBuildable {
+    
+    override func build(with component: TicTacToeComponent, _ listener: TicTacToeListener) -> TicTacToeRouting {
         let viewController = TicTacToeViewController()
-        let interactor = TicTacToeInteractor(presenter: viewController, player1Name: component.dependency.player1, player2Name: component.dependency.player2)
+        let interactor = TicTacToeInteractor(presenter: viewController, player1Name: component.dependency.player1Name, player2Name: component.dependency.player2Name)
         interactor.listener = listener
         return TicTacToeRouter(interactor: interactor, viewController: viewController)
+    }
+    
+    func build(withListener listener: TicTacToeListener) -> TicTacToeRouting {
+        build(withDynamicBuildDependency: listener, dynamicComponentDependency: ())
     }
 }

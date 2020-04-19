@@ -16,6 +16,7 @@
 
 import RIBs
 import RxSwift
+import Foundation
 
 protocol RootRouting: ViewableRouting {
     func routeToLoggedIn(withPlayer1Name player1Name: String, player2Name: String)
@@ -30,7 +31,7 @@ protocol RootListener: class {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
 }
 
-final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteractable, RootPresentableListener {
+final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteractable, RootPresentableListener, UrlHandler {
 
     weak var router: RootRouting?
 
@@ -62,4 +63,27 @@ final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteract
         mutablePlayersStream.update(player1: player1Name, player2: player2Name)
         router?.routeToLoggedIn(withPlayer1Name: player1Name, player2Name: player2Name)
     }
+    
+    // MARK: - UrlHandler
+
+    func handle(_ url: URL) {
+//        let launchGameWorkflow = LaunchGameWorkflow(url: url)
+//        launchGameWorkflow
+//            .subscribe(self)
+//            .disposeOnDeactivate(interactor: self)
+    }
+    
+    // MARK: - RootActionableItem
+
+//    func waitForLogin() -> Observable<(LoggedInActionableItem, ())> {
+//        return loggedInActionableItemSubject
+//            .map { (loggedInItem: LoggedInActionableItem) -> (LoggedInActionableItem, ()) in
+//                (loggedInItem, ())
+//        }
+//    }
+
+    // MARK: - Private
+
+//    private let loggedInActionableItemSubject = ReplaySubject<LoggedInActionableItem>.create(bufferSize: 1)
+
 }

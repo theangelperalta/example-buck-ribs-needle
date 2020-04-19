@@ -5,7 +5,7 @@
 //  Created by Angel Cortez on 4/7/20.
 //
 
-import NeedleFoundation
+import RIBs
 
 protocol OffGameDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be

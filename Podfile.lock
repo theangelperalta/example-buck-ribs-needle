@@ -1,43 +1,66 @@
 PODS:
-  - Bugsnag (5.23.0)
-  - CryptoSwift (1.3.0)
+  - Bugsnag (5.23.1)
+  - CryptoSwift (1.3.1)
   - NeedleFoundation (0.13.0)
   - Nimble (8.0.2)
   - PromiseKit/CoreLocation (6.1.1):
     - PromiseKit/CorePromise
   - PromiseKit/CorePromise (6.1.1)
   - Quick (2.1.0)
+  - RIBs (0.9.2):
+    - RxRelay (~> 5.0)
+    - RxSwift (~> 5.0)
+  - RxCocoa (5.0.1):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxRelay (5.1.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.1.1)
   - SnapKit (4.0.1)
 
 DEPENDENCIES:
   - Bugsnag
   - CryptoSwift
-  - NeedleFoundation (= 0.13.0)
+  - NeedleFoundation (from `./LocalPods/NeedleFoundation/NeedleFoundation.podspec`)
   - Nimble (= 8.0.2)
   - PromiseKit/CoreLocation (= 6.1.1)
   - PromiseKit/CorePromise (= 6.1.1)
   - Quick (= 2.1.0)
+  - RIBs (from `./LocalPods/RIBs/RIBs.podspec`)
+  - RxCocoa (= 5.0.1)
   - SnapKit (~> 4.0.0)
 
 SPEC REPOS:
   trunk:
     - Bugsnag
     - CryptoSwift
-    - NeedleFoundation
     - Nimble
     - PromiseKit
     - Quick
+    - RxCocoa
+    - RxRelay
+    - RxSwift
     - SnapKit
 
+EXTERNAL SOURCES:
+  NeedleFoundation:
+    :podspec: "./LocalPods/NeedleFoundation/NeedleFoundation.podspec"
+  RIBs:
+    :podspec: "./LocalPods/RIBs/RIBs.podspec"
+
 SPEC CHECKSUMS:
-  Bugsnag: 1f33ee5b55bc4b131a30e0fe6db714da9c6609f6
-  CryptoSwift: 1283821600233bdbeb96d7b389c3288c3bf77211
-  NeedleFoundation: dc79c0390c6eac99500657b1b67b39cdaf2328b4
+  Bugsnag: caa15cf2a5d9278f04e1dda70c0cc6d42d3c9625
+  CryptoSwift: f12f037f6d0fcd6d48c96db0071b653de64e6c4d
+  NeedleFoundation: 4c360fc78ec77abba84b1fb211e1f454ce44d800
   Nimble: 622629381bda1dd5678162f21f1368cec7cbba60
   PromiseKit: 876f433b87c970f020e04e35dbe68ab21d240498
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
+  RIBs: 5a18235e99ba6a2e8f1fb100ed793da1276e61f7
+  RxCocoa: e741b9749968e8a143e2b787f1dfbff2b63d0a5c
+  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SnapKit: 0de968a9fec17499afa29683b05d0c775b6d1c29
 
-PODFILE CHECKSUM: 63ae721a75f037ea58512b4a564cef4d0672fea4
+PODFILE CHECKSUM: 7befd12b3033ba371db1a761c1c21ee8ed537c6d
 
 COCOAPODS: 1.9.1

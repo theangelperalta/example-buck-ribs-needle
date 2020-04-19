@@ -55,7 +55,7 @@ def apple_test_lib(
         "CURRENT_PROJECT_VERSION": "1",
         "DEVELOPMENT_LANGUAGE": DEVELOPMENT_LANGUAGE,
         "EXECUTABLE_NAME": name,
-        "PRODUCT_BUNDLE_IDENTIFIER": "com.airbnb.%s" % name,
+        "PRODUCT_BUNDLE_IDENTIFIER": "com.angel.cortez.%s" % name,
         "PRODUCT_NAME": name,
     }
     substitutions.update(info_plist_substitutions)

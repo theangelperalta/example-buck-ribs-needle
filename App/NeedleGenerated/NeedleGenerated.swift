@@ -4,7 +4,6 @@
 // This source code is licensed under the license found in the
 // LICENSE file in the root directory of this source tree.
 
-import MissingNeedleCode
 import NeedleFoundation
 import RIBs
 import UIKit
@@ -12,28 +11,31 @@ import UIKit
 // MARK: - Registration
 
 public func registerProviderFactories() {
-    __DependencyProviderRegistry.instance.registerDependencyProviderFactory(for: "^->RootComponent->LoggedInComponent->OffGameComponent") { component in
-        return OffGameDependency19a483c7a4199f31827fProvider(component: component)
+    __DependencyProviderRegistry.instance.registerDependencyProviderFactory(for: "^->AppComponent->RootComponent->LoggedInComponent->OffGameComponent") { component in
+        return OffGameDependencyd53a6d8de337faf82051Provider(component: component)
     }
-    __DependencyProviderRegistry.instance.registerDependencyProviderFactory(for: "^->RootComponent->LoggedInComponent->TicTacToeComponent") { component in
-        return TicTacToeDependency116f7b2429d569089340Provider(component: component)
+    __DependencyProviderRegistry.instance.registerDependencyProviderFactory(for: "^->AppComponent->RootComponent->LoggedInComponent->TicTacToeComponent") { component in
+        return TicTacToeDependencyc1962481786e7e2d50d7Provider(component: component)
     }
-    __DependencyProviderRegistry.instance.registerDependencyProviderFactory(for: "^->RootComponent->LoggedOutComponent") { component in
-        return LoggedOutDependencyacada53ea78d270efa2fProvider(component: component)
+    __DependencyProviderRegistry.instance.registerDependencyProviderFactory(for: "^->AppComponent->RootComponent->LoggedOutComponent") { component in
+        return LoggedOutDependency615895bced3f6b602f11Provider(component: component)
     }
-    __DependencyProviderRegistry.instance.registerDependencyProviderFactory(for: "^->RootComponent->LoggedInComponent") { component in
-        return LoggedInDependency637c07bfce1b5ccf0a6eProvider(component: component)
+    __DependencyProviderRegistry.instance.registerDependencyProviderFactory(for: "^->AppComponent->RootComponent->LoggedInComponent") { component in
+        return LoggedInDependency236aeab04e438dce1453Provider(component: component)
     }
-    __DependencyProviderRegistry.instance.registerDependencyProviderFactory(for: "^->RootComponent") { component in
+    __DependencyProviderRegistry.instance.registerDependencyProviderFactory(for: "^->AppComponent") { component in
         return EmptyDependencyProvider(component: component)
+    }
+    __DependencyProviderRegistry.instance.registerDependencyProviderFactory(for: "^->AppComponent->RootComponent") { component in
+        return RootDependency3944cc797a4a88956fb5Provider(component: component)
     }
     
 }
 
 // MARK: - Providers
 
-/// ^->RootComponent->LoggedInComponent->OffGameComponent
-private class OffGameDependency19a483c7a4199f31827fProvider: OffGameDependency {
+/// ^->AppComponent->RootComponent->LoggedInComponent->OffGameComponent
+private class OffGameDependencyd53a6d8de337faf82051Provider: OffGameDependency {
     var player1Name: String {
         return loggedInComponent.player1Name
     }
@@ -48,21 +50,21 @@ private class OffGameDependency19a483c7a4199f31827fProvider: OffGameDependency {
         loggedInComponent = component.parent as! LoggedInComponent
     }
 }
-/// ^->RootComponent->LoggedInComponent->TicTacToeComponent
-private class TicTacToeDependency116f7b2429d569089340Provider: TicTacToeDependency {
-    var player1: String {
-        return loggedInComponent.player1
+/// ^->AppComponent->RootComponent->LoggedInComponent->TicTacToeComponent
+private class TicTacToeDependencyc1962481786e7e2d50d7Provider: TicTacToeDependency {
+    var player1Name: String {
+        return loggedInComponent.player1Name
     }
-    var player2: String {
-        return loggedInComponent.player2
+    var player2Name: String {
+        return loggedInComponent.player2Name
     }
     private let loggedInComponent: LoggedInComponent
     init(component: NeedleFoundation.Scope) {
         loggedInComponent = component.parent as! LoggedInComponent
     }
 }
-/// ^->RootComponent->LoggedOutComponent
-private class LoggedOutDependencyacada53ea78d270efa2fProvider: LoggedOutDependency {
+/// ^->AppComponent->RootComponent->LoggedOutComponent
+private class LoggedOutDependency615895bced3f6b602f11Provider: LoggedOutDependency {
     var mutablePlayersStream: MutablePlayersStream {
         return rootComponent.mutablePlayersStream
     }
@@ -71,10 +73,10 @@ private class LoggedOutDependencyacada53ea78d270efa2fProvider: LoggedOutDependen
         rootComponent = component.parent as! RootComponent
     }
 }
-/// ^->RootComponent->LoggedInComponent
-private class LoggedInDependency637c07bfce1b5ccf0a6eProvider: LoggedInDependency {
-    var loggedInViewController: LoggedInViewControllable {
-        return rootComponent.loggedInViewController
+/// ^->AppComponent->RootComponent->LoggedInComponent
+private class LoggedInDependency236aeab04e438dce1453Provider: LoggedInDependency {
+    var viewController: LoggedInViewControllable {
+        return rootComponent.viewController
     }
     var playersStream: PlayersStream {
         return rootComponent.playersStream
@@ -82,5 +84,13 @@ private class LoggedInDependency637c07bfce1b5ccf0a6eProvider: LoggedInDependency
     private let rootComponent: RootComponent
     init(component: NeedleFoundation.Scope) {
         rootComponent = component.parent as! RootComponent
+    }
+}
+/// ^->AppComponent->RootComponent
+private class RootDependency3944cc797a4a88956fb5Provider: RootDependency {
+
+
+    init(component: NeedleFoundation.Scope) {
+
     }
 }

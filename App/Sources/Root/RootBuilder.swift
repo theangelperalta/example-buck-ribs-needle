@@ -15,40 +15,33 @@
 //
 
 import RIBs
-import NeedleFoundation
-import MissingNeedleCode
-
-//protocol RootDependency: Dependency {
-//    // TODO: Declare the set of dependencies required by this RIB, but cannot be
-//    // created by this RIB.
-//}
 
 // MARK: - Builder
 
-//protocol RootBuildable: Buildable {
-//    func build() -> LaunchRouting
-//}
+protocol RootBuildable: Buildable {
+    func build() -> (launchRouter: LaunchRouting, urlHandler: UrlHandler)
+}
 
-final class RootBuilder: NeedleBuilder<RootComponent> {
+final class RootBuilder: SimpleComponentizedBuilder<RootComponent, LaunchRouting>, RootBuildable {
 
-    func build() -> LaunchRouting {
-        let component = RootComponent()
-        
-        
+    func build() -> (launchRouter: LaunchRouting, urlHandler: UrlHandler) {
+        let (component, router) = build(withDynamicBuildDependency: (), dynamicComponentDependency: ())
 
-//        let loggedOutBuilder = LoggedOutBuilder(dependency: component)
-//        let loggedOutBuilder = component.loggedOutComponent
+        return (router, component.interactor)
+    }
+    
+    override func build(with component: RootComponent) -> LaunchRouting {
         let loggedOutBuilder = LoggedOutBuilder {
             component.loggedOutComponent
         }
-//        let loggedInBuilder = LoggedInBuilder(dependency: component)
-        let loggedInBuilder = LoggedInBuilder {
-            component.loggedInComponent
+        let loggedInBuilder = LoggedInBuilder { player1Name, player2Name in
+            component.loggedInComponent(player1Name: player1Name, player2Name: player2Name)
         }
-//        let loggedInBuilder = component.loggedInComponent
-        return RootRouter(interactor: component.rootInteractor,
-                          viewController: component.rootViewController,
-                          loggedOutBuilder: loggedOutBuilder,
-                          loggedInBuilder: loggedInBuilder)
+        let router = RootRouter(interactor: component.interactor,
+                                viewController: component.rootViewController,
+                                loggedOutBuilder: loggedOutBuilder,
+                                loggedInBuilder: loggedInBuilder)
+
+        return router
     }
 }

@@ -8,6 +8,54 @@ apple_third_party_lib(
 )
 
 apple_third_party_lib(
+    name = "RIBs",
+    visibility = ["PUBLIC"],
+    srcs = glob([
+        "RIBs/**/*.swift",
+    ]),
+    deps = [
+        "//Pods:RxSwift",
+        "//Pods:RxRelay",
+    ],
+    # frameworks = [
+        # "$SDKROOT/System/Library/Frameworks/Foundation.framework",
+        # "$SDKROOT/System/Library/Frameworks/UIKit.framework",
+    # ],
+)
+
+apple_third_party_lib(
+    name = "RxSwift",
+    srcs = glob([
+        "RxSwift/**/*.swift",
+    ]),
+)
+
+apple_third_party_lib(
+    name = "RxRelay",
+    srcs = glob([
+        "RxRelay/**/*.swift",
+    ]),
+    deps = [
+        "//Pods:RxSwift",
+    ],
+)
+
+apple_third_party_lib(
+    name = "RxCocoa",
+    exported_headers = glob([
+        "RxCocoa/**/*.h",
+    ]),
+    srcs = glob([
+        "RxCocoa/**/*.m",
+        "RxCocoa/**/*.swift",
+    ]),
+    deps = [
+        "//Pods:RxSwift",
+        "//Pods:RxRelay",
+    ],
+)
+
+apple_third_party_lib(
     name = "SnapKit",
     srcs = glob([
         "SnapKit/**/*.swift",

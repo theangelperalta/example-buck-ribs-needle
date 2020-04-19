@@ -2,28 +2,28 @@ load("//Config:buck_rule_macros.bzl", "apple_lib")
 
 prebuilt_apple_framework(
     name = "RIBs",
-    framework = "Build/iOS/RIBs.framework",
+    framework = "Build/iOS/Static/RIBs.framework",
     preferred_linkage = "shared",
     visibility = ["PUBLIC"],
 )
 
 prebuilt_apple_framework(
     name = "RxSwift",
-    framework = "Build/iOS/RxSwift.framework",
+    framework = "Build/iOS/Static/RxSwift.framework",
     preferred_linkage = "shared",
     visibility = ["PUBLIC"],
 )
 
 prebuilt_apple_framework(
     name = "RxCocoa",
-    framework = "Build/iOS/RxCocoa.framework",
+    framework = "Build/iOS/Static/RxCocoa.framework",
     preferred_linkage = "shared",
     visibility = ["PUBLIC"],
 )
 
 prebuilt_apple_framework(
     name = "NeedleFoundation",
-    framework = "Build/iOS/NeedleFoundation.framework",
+    framework = "Build/iOS/Static/NeedleFoundation.framework",
     preferred_linkage = "shared",
     visibility = ["PUBLIC"],
 )

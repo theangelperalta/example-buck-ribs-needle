@@ -14,8 +14,7 @@
 //  limitations under the License.
 //
 
-import NeedleFoundation
-import MissingNeedleCode
+import RIBs
 
 // MARK: - Builder
 
@@ -23,15 +22,20 @@ protocol OffGameBuildable: Buildable {
     func build(withListener listener: OffGameListener) -> OffGameRouting
 }
 
-final class OffGameBuilder: NeedleBuilder<OffGameComponent>, OffGameBuildable {
-
-    func build(withListener listener: OffGameListener) -> OffGameRouting {
-        let component = componentBuilder()
+final class OffGameBuilder: ComponentizedBuilder<OffGameComponent, OffGameRouting, OffGameListener, Void>, OffGameBuildable {
+    
+    override func build(with component: OffGameComponent, _ listener: OffGameListener) -> OffGameRouting {
         let viewController = OffGameViewController(player1Name: component.dependency.player1Name,
         player2Name: component.dependency.player2Name)
         let interactor = OffGameInteractor(presenter: viewController, scoreStream: component.dependency.scoreStream)
-        
         interactor.listener = listener
-        return OffGameRouter(interactor: interactor, viewController: viewController)
+
+        let router = OffGameRouter(interactor: interactor, viewController: viewController)
+        return router
+    }
+
+    func build(withListener listener: OffGameListener) -> OffGameRouting {
+        return build(withDynamicBuildDependency: listener,
+        dynamicComponentDependency: ())
     }
 }

@@ -43,7 +43,7 @@ def optimization_config():
 ALL_LOAD_LINKER_FLAG = "-all_load"
 
 def bundle_identifier(name):
-    return "com.airbnb.%s" % name
+    return "com.angel.cortez.%s" % name
 
 def library_configs():
     lib_specific_config = {

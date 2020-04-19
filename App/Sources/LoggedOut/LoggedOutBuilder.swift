@@ -15,28 +15,23 @@
 //
 
 import RIBs
-import MissingNeedleCode
-//protocol LoggedOutDependency: Dependency {
-//    // TODO: Declare the set of dependencies required by this RIB, but cannot be
-//    // created by this RIB.
-//}
-//
-//final class LoggedOutComponent: Component<LoggedOutDependency> {
-//
-//    // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
-//}
 
 // MARK: - Builder
 
-protocol LoggedOutBuildable: MissingNeedleCode.Buildable {
+protocol LoggedOutBuildable: Buildable {
     func build(withListener listener: LoggedOutListener) -> LoggedOutRouting
 }
 
-final class LoggedOutBuilder: NeedleBuilder<LoggedOutComponent>, LoggedOutBuildable {
+final class LoggedOutBuilder: ComponentizedBuilder<LoggedOutComponent, LoggedOutRouting, LoggedOutListener, Void>, LoggedOutBuildable {
+
+    override func build(with component: LoggedOutComponent, _ listener: LoggedOutListener) -> LoggedOutRouting {
+        let interactor = component.interactor
+        interactor.listener = listener
+        return LoggedOutRouter(interactor: interactor,
+                               viewController: component.viewController)
+    }
 
     func build(withListener listener: LoggedOutListener) -> LoggedOutRouting {
-        let component = componentBuilder()
-        component.loggedOutInteractor.listener = listener
-        return LoggedOutRouter(interactor: component.loggedOutInteractor, viewController: component.loggedOutViewController)
+        build(withDynamicBuildDependency: listener, dynamicComponentDependency: ())
     }
 }
