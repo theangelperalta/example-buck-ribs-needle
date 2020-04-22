@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import Models
 
 protocol LoggedInDependency: Dependency {
     var viewController: LoggedInViewControllable { get }

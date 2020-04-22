@@ -16,17 +16,7 @@
 
 import RIBs
 import RxSwift
-
-enum PlayerType: Int {
-    case player1 = 1
-    case player2
-    case draw
-}
-
-struct Player {
-    let type: PlayerType
-    let name: String
-}
+import Models
 
 protocol LoggedInRouting: Routing {
     func cleanupViews()

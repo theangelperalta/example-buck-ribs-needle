@@ -19,6 +19,7 @@ import RxCocoa
 import RxSwift
 import SnapKit
 import UIKit
+import Models
 
 protocol OffGamePresentableListener: class {
     func startGame()

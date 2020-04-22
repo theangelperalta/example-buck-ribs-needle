@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import Models
 
 protocol LoggedOutDependency: Dependency {
     var mutablePlayersStream: MutablePlayersStream { get }

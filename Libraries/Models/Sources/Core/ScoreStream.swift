@@ -16,37 +16,39 @@
 
 import RxSwift
 
-struct Score {
-    let player1Score: Int
-    let player2Score: Int
-    let draws: Int
+public struct Score {
+    public let player1Score: Int
+    public let player2Score: Int
+    public let draws: Int
 
     static func equals(lhs: Score, rhs: Score) -> Bool {
         return lhs.player1Score == rhs.player1Score && lhs.player2Score == rhs.player2Score && lhs.draws == rhs.draws
     }
 }
 
-protocol ScoreStream: class {
+public protocol ScoreStream: class {
     var score: Observable<Score> { get }
 }
 
-protocol MutableScoreStream: ScoreStream {
+public protocol MutableScoreStream: ScoreStream {
     func updateScore(withWinner winner: PlayerType)
 }
 
-class ScoreStreamImpl: MutableScoreStream {
+public class ScoreStreamImpl: MutableScoreStream {
+    
+    public init() {}
 
-    var score: Observable<Score> {
-        return variable
+    public var score: Observable<Score> {
+        return scoreSubject
             .asObservable()
             .distinctUntilChanged { (lhs: Score, rhs: Score) -> Bool in
                 Score.equals(lhs: lhs, rhs: rhs)
             }
     }
 
-    func updateScore(withWinner winner: PlayerType) {
+    public func updateScore(withWinner winner: PlayerType) {
         let newScore: Score = {
-            let currentScore = variable.value
+            let currentScore = self.currentScore
             switch winner {
             case .player1:
                 return Score(player1Score: currentScore.player1Score + 1, player2Score: currentScore.player2Score, draws: currentScore.draws)
@@ -56,10 +58,12 @@ class ScoreStreamImpl: MutableScoreStream {
                 return Score(player1Score: currentScore.player1Score, player2Score: currentScore.player2Score, draws: currentScore.draws + 1)
             }
         }()
-        variable.value = newScore
+        currentScore = newScore
+        scoreSubject.onNext(newScore)
     }
 
     // MARK: - Private
-
-    private let variable = Variable<Score>(Score(player1Score: 0, player2Score: 0, draws: 0))
+    
+    private let scoreSubject = ReplaySubject<Score>.create(bufferSize: 1)
+    private var currentScore: Score = Score(player1Score: 0, player2Score: 0, draws: 0)
 }

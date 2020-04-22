@@ -7,23 +7,25 @@
 import Foundation
 import RxSwift
 
-protocol PlayersStream {
+public protocol PlayersStream {
     var names: Observable<(String, String)?> { get }
 }
 
-protocol MutablePlayersStream: PlayersStream {
+public protocol MutablePlayersStream: PlayersStream {
     func update(player1: String?, player2: String?)
 }
 
-class PlayersStreamImpl: MutablePlayersStream {
+public class PlayersStreamImpl: MutablePlayersStream {
+    
+    public init() {}
 
     private let subject = BehaviorSubject<(String, String)?>(value: nil)
 
-    var names: Observable<(String, String)?> {
+    public var names: Observable<(String, String)?> {
         return subject.asObservable()
     }
 
-    func update(player1: String?, player2: String?) {
+    public func update(player1: String?, player2: String?) {
         let player1Name: String
         if let player1 = player1, !player1.isEmpty {
             player1Name = player1

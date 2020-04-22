@@ -17,6 +17,7 @@
 import RIBs
 import RxSwift
 import Foundation
+import Models
 
 protocol RootRouting: ViewableRouting {
     func routeToLoggedIn(withPlayer1Name player1Name: String, player2Name: String)

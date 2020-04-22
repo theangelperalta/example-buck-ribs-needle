@@ -17,6 +17,7 @@
 import RIBs
 import SnapKit
 import UIKit
+import Models
 
 protocol TicTacToePresentableListener: class {
     func placeCurrentPlayerMark(atRow row: Int, col: Int)

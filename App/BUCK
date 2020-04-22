@@ -21,6 +21,9 @@ ui_tests = [
 # Every first-party library has an associated test target. We use this list to determine what test targets to run in CI.
 first_party_library_dependencies = [
     "//Libraries/TTTUtilties:TTTUtilties",
+    "//Libraries/Models:Models",
+    "//Libraries/LoggedInPlugin:LoggedInPlugin",
+    "//Libraries/ScoreSheet:ScoreSheet",
     # "//Libraries/ASwiftModule:ASwiftModule",
     # "//Libraries/Cpp1:Cpp1",
     # "//Libraries/Objc1:Objc1",
@@ -48,7 +51,7 @@ prebuilt_frameworks = [
 # Build Phase scripts need to be added as dependencies.
 # These only get executed when building with Xcode, not Buck.
 build_phase_scripts = [
-    ":NeedleGeneration",
+    ":NeedleGenerationCore",
     ":Hello_World",
     ":Bye_World",
 ]
@@ -109,8 +112,8 @@ apple_binary(
 
 # Defines a Build Phase script that gets executed before the "Compile Sources" step
 xcode_prebuild_script(
-    name = "NeedleGeneration",
-    cmd = '"${SRCROOT}/../scripts/needle-gen.sh"',
+    name = "NeedleGenerationCore",
+    cmd = '"${SRCROOT}/../scripts/needle-gen.sh" Core',
     inputs = [],
     outputs = [],
     input_file_lists = [],
