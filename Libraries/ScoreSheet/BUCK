@@ -4,5 +4,6 @@ first_party_library(
     name = "ScoreSheet",
     deps = [
         "//Libraries/Models:Models",
+        "//Libraries/LoggedInPlugin:LoggedInPlugin",
     ],
 )

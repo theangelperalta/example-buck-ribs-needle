@@ -6,34 +6,50 @@
 //
 
 import RIBs
+import Models
+import LoggedInPlugin
+import Foundation
 
-protocol ScoreSheetDependency: Dependency {
+
+public protocol ScoreSheetDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
+    var scoreStream: ScoreStream { get }
 }
 
-final class ScoreSheetComponent: Component<ScoreSheetDependency> {
+public final class ScoreSheetComponent: Component<ScoreSheetDependency> {
 
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
 }
 
 // MARK: - Builder
 
-protocol ScoreSheetBuildable: Buildable {
-    func build(withListener listener: ScoreSheetListener) -> ScoreSheetRouting
+protocol ScoreSheetBuildable: LoggedInPluginBuildable {
 }
 
-final class ScoreSheetBuilder: Builder<ScoreSheetDependency>, ScoreSheetBuildable {
-
-    override init(dependency: ScoreSheetDependency) {
-        super.init(dependency: dependency)
+public final class ScoreSheetBuilder: ComponentizedBuilder<ScoreSheetComponent, ScoreSheetRouting, ScoreSheetListener, Void>, ScoreSheetBuildable, ILoggedInPlugin {
+    
+    private let bundle = Bundle(for: ScoreSheetBuildable.self as! AnyClass)
+    
+    public var id: String {
+        bundle.bundleIdentifier ?? ""
     }
-
-    func build(withListener listener: ScoreSheetListener) -> ScoreSheetRouting {
+    
+    public var builder: LoggedInPluginBuildable {
+        self
+    }
+    
+    
+    public func build(withListener listener: LoginPluginListener) -> ViewableRouting {
 //        let component = ScoreSheetComponent(dependency: dependency)
         let viewController = ScoreSheetViewController()
         let interactor = ScoreSheetInteractor(presenter: viewController)
         interactor.listener = listener
         return ScoreSheetRouter(interactor: interactor, viewController: viewController)
+    }
+    
+    func build(withListener listener: ScoreSheetListener) -> ScoreSheetRouting {
+        return build(withDynamicBuildDependency: listener,
+        dynamicComponentDependency: ())
     }
 }

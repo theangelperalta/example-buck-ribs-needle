@@ -23,6 +23,7 @@ first_party_library_dependencies = [
     "//Libraries/TTTUtilties:TTTUtilties",
     "//Libraries/Models:Models",
     "//Libraries/LoggedInPlugin:LoggedInPlugin",
+    "//Libraries/LoggedInPluginPoint:LoggedInPluginPoint",
     "//Libraries/ScoreSheet:ScoreSheet",
     # "//Libraries/ASwiftModule:ASwiftModule",
     # "//Libraries/Cpp1:Cpp1",
@@ -113,7 +114,7 @@ apple_binary(
 # Defines a Build Phase script that gets executed before the "Compile Sources" step
 xcode_prebuild_script(
     name = "NeedleGenerationCore",
-    cmd = '"${SRCROOT}/../scripts/needle-gen.sh" Core',
+    cmd = '"${REPO_ROOT}/scripts/needle-gen.sh" Core',
     inputs = [],
     outputs = [],
     input_file_lists = [],

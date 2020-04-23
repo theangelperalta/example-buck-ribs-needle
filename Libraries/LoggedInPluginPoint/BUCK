@@ -1,0 +1,21 @@
+load("//Config:buck_rule_macros.bzl", "first_party_library")
+
+first_party_library(
+    name = "LoggedInPluginPoint",
+    deps = [
+        "//Pods:NeedleFoundation",
+        "//Libraries/ScoreSheet:ScoreSheet",
+        "//Libraries/Models:Models",
+        ":NeedleGenerationLoggedInPluginPoint",
+    ],
+)
+
+# Defines a Build Phase script that gets executed before the "Compile Sources" step
+xcode_prebuild_script(
+    name = "NeedleGenerationLoggedInPluginPoint",
+    cmd = '"${REPO_ROOT}/scripts/needle-gen.sh" LoggedInPluginPoint',
+    inputs = [],
+    outputs = [],
+    input_file_lists = [],
+    output_file_lists = [],
+)

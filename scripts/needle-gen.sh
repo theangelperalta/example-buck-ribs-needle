@@ -7,6 +7,5 @@ if [ ! -z $1 ]; then
     FILENAME_EXT=$1
 fi
 
-# export SOURCEKIT_LOGGING=0 && ../Carthage/Checkouts/needle/Generator/bin/needle generate $GEN_PATH/NeedleGenerated.swift $SRCS --header-doc ../copyright_header.txt
-# ../Carthage/Checkouts/needle/Generator/bin/needle generate $GEN_PATH/NeedleGenerated.swift $SRCS --header-doc ../copyright_header.txt --exclude-paths $SRCS/OffGame $SRCS/LoggedIn
-export SOURCEKIT_LOGGING=0 && ../Carthage/Checkouts/needle/Generator/bin/needle generate $GEN_PATH/NeedleGenerated$FILENAME_EXT.swift $SRCS --header-doc ../copyright_header.txt
+# export SOURCEKIT_LOGGING=0 && $REPO_ROOT/Carthage/Checkouts/needle/Generator/bin/needle generate $GEN_PATH/NeedleGenerated$FILENAME_EXT.swift $SRCS --header-doc $REPO_ROOT/copyright_header.txt
+export SOURCEKIT_LOGGING=1 && $REPO_ROOT/Carthage/Checkouts/needle/Generator/bin/needle generate $GEN_PATH/NeedleGenerated$FILENAME_EXT.swift $SRCS --header-doc $REPO_ROOT/copyright_header.txt

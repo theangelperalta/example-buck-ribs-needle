@@ -7,8 +7,8 @@
 
 import RIBs
 import RxSwift
-
-protocol ScoreSheetRouting: ViewableRouting {
+import LoggedInPlugin
+public protocol ScoreSheetRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
 }
 
@@ -17,14 +17,14 @@ protocol ScoreSheetPresentable: Presentable {
     // TODO: Declare methods the interactor can invoke the presenter to present data.
 }
 
-protocol ScoreSheetListener: class {
+public protocol ScoreSheetListener: LoginPluginListener {
     // TODO: Declare methods the interactor can invoke to communicate with other RIBs.
 }
 
 final class ScoreSheetInteractor: PresentableInteractor<ScoreSheetPresentable>, ScoreSheetInteractable, ScoreSheetPresentableListener {
 
     weak var router: ScoreSheetRouting?
-    weak var listener: ScoreSheetListener?
+    weak var listener: LoginPluginListener?
 
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.

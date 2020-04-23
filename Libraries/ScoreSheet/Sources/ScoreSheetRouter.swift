@@ -6,10 +6,11 @@
 //
 
 import RIBs
+import LoggedInPlugin
 
 protocol ScoreSheetInteractable: Interactable {
     var router: ScoreSheetRouting? { get set }
-    var listener: ScoreSheetListener? { get set }
+    var listener: LoginPluginListener? { get set }
 }
 
 protocol ScoreSheetViewControllable: ViewControllable {

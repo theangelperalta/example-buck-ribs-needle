@@ -6,6 +6,7 @@
 //
 
 import RIBs
+import LoggedInPluginPoint
 import Models
 
 protocol LoggedInDependency: Dependency {
