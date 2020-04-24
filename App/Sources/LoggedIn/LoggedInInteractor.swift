@@ -68,4 +68,9 @@ final class LoggedInInteractor: Interactor, LoggedInInteractable {
         
         router?.routeToOffGame()
     }
+    
+    // MARK: - LoggedInPluginListener
+    func done() {
+        router?.routeToOffGame()
+    }
 }

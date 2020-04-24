@@ -41,8 +41,12 @@ final class LoggedInBuilder: ComponentizedBuilder<LoggedInComponent, LoggedInRou
         let ticTacBuilder = TicTacToeBuilder {
             component.ticTacToeComponent
         }
+        
+        let loggedInPluginFactory = component.loggedInPluginFactory
+        
         let router = LoggedInRouter(interactor: interactor,
                                     viewController: component.viewController,
+                                    loggedInPluginFactory: loggedInPluginFactory,
                                     offGameBuilder: offGameBuilder,
                                     ticTacToeBuilder: ticTacBuilder
         )

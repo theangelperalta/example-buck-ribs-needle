@@ -6,7 +6,7 @@ first_party_library(
         "//Pods:NeedleFoundation",
         "//Libraries/ScoreSheet:ScoreSheet",
         "//Libraries/Models:Models",
-        ":NeedleGenerationLoggedInPluginPoint",
+        #":NeedleGenerationLoggedInPluginPoint",
     ],
 )
 

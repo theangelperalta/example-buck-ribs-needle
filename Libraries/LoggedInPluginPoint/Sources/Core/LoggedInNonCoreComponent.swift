@@ -11,10 +11,14 @@ import ScoreSheet
 
 /// Component for the LoggedIn non core scope.
 public class LoggedInNonCoreComponent: NonCoreComponent<EmptyDependency>, ScoreSheetDependency {
+    
+    var scoreSheetComponent: ScoreSheetComponent {
+        return ScoreSheetComponent(dependency: self)
+    }
 
     fileprivate var scoreSheetBuilder: ScoreSheetBuilder {
-        ScoreSheetBuilder {
-            ScoreSheetComponent(dependency: self)
+        return ScoreSheetBuilder { [weak self] in
+            self!.scoreSheetComponent
         }
     }
 

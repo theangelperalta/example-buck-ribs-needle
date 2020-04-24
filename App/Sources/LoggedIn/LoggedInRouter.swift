@@ -15,8 +15,10 @@
 //
 
 import RIBs
+import LoggedInPluginPoint
+import LoggedInPlugin
 
-protocol LoggedInInteractable: Interactable, OffGameListener, TicTacToeListener {
+protocol LoggedInInteractable: Interactable, OffGameListener, TicTacToeListener, LoginPluginListener {
     var router: LoggedInRouting? { get set }
     var listener: LoggedInListener? { get set }
 }
@@ -30,9 +32,11 @@ final class LoggedInRouter: Router<LoggedInInteractable>, LoggedInRouting {
 
     init(interactor: LoggedInInteractable,
          viewController: LoggedInViewControllable,
+         loggedInPluginFactory: ILoggedInPluginFactory,
          offGameBuilder: OffGameBuildable,
          ticTacToeBuilder: TicTacToeBuildable) {
         self.viewController = viewController
+        self.loggedInPluginFactory = loggedInPluginFactory
         self.offGameBuilder = offGameBuilder
         self.ticTacToeBuilder = ticTacToeBuilder
         super.init(interactor: interactor)
@@ -71,8 +75,20 @@ final class LoggedInRouter: Router<LoggedInInteractable>, LoggedInRouting {
     private let viewController: LoggedInViewControllable
     private let offGameBuilder: OffGameBuildable
     private let ticTacToeBuilder: TicTacToeBuildable
+    private let loggedInPluginFactory: ILoggedInPluginFactory
 
     private var currentChild: ViewableRouting?
+    
+    private func attachPlugin(id: String) {
+        guard let plugin = loggedInPluginFactory.getPlugin(id: id)?.builder.build(withListener: interactor) else {
+            print("Plugin with id: \(id) doesn't exist!")
+            return
+        }
+        
+        self.currentChild = plugin
+        attachChild(plugin)
+        viewController.present(viewController: plugin.viewControllable)
+    }
 
     private func attachOffGame() {
         let offGame = offGameBuilder.build(withListener: interactor)
