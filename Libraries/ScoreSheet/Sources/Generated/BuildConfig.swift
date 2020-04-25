@@ -7,6 +7,6 @@
 
 enum BuildConfig {
     static let version = "1.0.0"
-    static let buildNumber  = "2300012"
+    static let buildNumber  = "2300013"
     static let bundleIdentifier = "com.loggedin.plugin.ScoreSheet"
 }

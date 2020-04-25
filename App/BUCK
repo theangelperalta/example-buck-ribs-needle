@@ -52,7 +52,6 @@ prebuilt_frameworks = [
 # Build Phase scripts need to be added as dependencies.
 # These only get executed when building with Xcode, not Buck.
 build_phase_scripts = [
-    ":NeedleGenerationCore",
     ":Hello_World",
     ":Bye_World",
 ]
@@ -73,7 +72,7 @@ apple_library(
         "Sources/TicTacToe/*",
         "Sources/OffGame/*",
         "NeedleGenerated/*.swift",
-    ]), # + ["//App/NeedleGenerated:Needle"],
+    ]) + [":Needle"],
     tests = app_tests,
     deps = [
         # "//Pods:CryptoSwift",
@@ -112,14 +111,6 @@ apple_binary(
 
 
 # Defines a Build Phase script that gets executed before the "Compile Sources" step
-xcode_prebuild_script(
-    name = "NeedleGenerationCore",
-    cmd = '"${REPO_ROOT}/scripts/gen-needle.sh" Core',
-    inputs = [],
-    outputs = [],
-    input_file_lists = [],
-    output_file_lists = [],
-)
 
 xcode_prebuild_script(
     name = "Hello_World",
@@ -138,6 +129,12 @@ xcode_postbuild_script(
     outputs = [],
     input_file_lists = [],
     output_file_lists = [],
+)
+
+genrule(
+  name = 'Needle',
+  bash = 'export SOURCEKIT_LOGGING=0 && ROOT=$REPO_ROOT && SRCS=$ROOT/App/Sources && $ROOT/Carthage/Checkouts/needle/Generator/bin/needle generate $OUT $SRCS $ROOT/Libraries/  --pluginized --header-doc $ROOT/copyright_header.txt',
+  out = 'NeedleGenerationCore.swift'
 )
 
 # This test bundles all unit test libraries into a single test target.

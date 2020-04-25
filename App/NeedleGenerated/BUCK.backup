@@ -1,8 +1,0 @@
-
-filegroup(
-    name = "Needle",
-    visibility = ["PUBLIC"],
-    srcs = glob([
-        "**/*.swift",
-    ])
-)
