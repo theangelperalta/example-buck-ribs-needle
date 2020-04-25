@@ -114,14 +114,13 @@ apple_binary(
 # Defines a Build Phase script that gets executed before the "Compile Sources" step
 xcode_prebuild_script(
     name = "NeedleGenerationCore",
-    cmd = '"${REPO_ROOT}/scripts/needle-gen.sh" Core',
+    cmd = '"${REPO_ROOT}/scripts/gen-needle.sh" Core',
     inputs = [],
     outputs = [],
     input_file_lists = [],
     output_file_lists = [],
 )
 
-# Defines a Build Phase script that gets executed before the "Compile Sources" step
 xcode_prebuild_script(
     name = "Hello_World",
     cmd = '"${SRCROOT}/../scripts/sample.sh"',

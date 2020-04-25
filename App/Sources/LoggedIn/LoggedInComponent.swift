@@ -53,9 +53,12 @@ final class LoggedInComponent: PluginizedComponent<LoggedInDependency, LoggedInP
     let player1Name: String
     let player2Name: String
 
-    init(dependency: LoggedInDependency, player1Name: String, player2Name: String) {
+    // TODO: Replace this the dangerous force cast and explicit passing of dependencies
+    // with PlayersStream. Thus, removing the need to create this constructor and
+    // force unwrap.
+    init(parent: LoggedInDependency, player1Name: String, player2Name: String) {
         self.player1Name = player1Name
         self.player2Name = player2Name
-        super.init(parent: dependency as! Scope)
+        super.init(parent: parent as! Scope)
     }
 }

@@ -22,6 +22,7 @@ protocol LoggedInRouting: Routing {
     func cleanupViews()
     func routeToTicTacToe()
     func routeToOffGame()
+    func routeToPlugin(id: String)
 }
 
 protocol LoggedInListener: class {
@@ -66,7 +67,8 @@ final class LoggedInInteractor: Interactor, LoggedInInteractable {
             mutableScoreStream.updateScore(withWinner: .draw)
         }
         
-        router?.routeToOffGame()
+//        router?.routeToOffGame()
+        router?.routeToPlugin(id: "com.loggedin.plugin.ScoreSheet")
     }
     
     // MARK: - LoggedInPluginListener

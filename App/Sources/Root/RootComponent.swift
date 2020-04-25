@@ -5,7 +5,7 @@
 //  Created by Angel Cortez on 4/4/20.
 //
 
-import RIBs
+import NeedleFoundation
 import UIKit
 import Models
 
@@ -41,6 +41,6 @@ class RootComponent: Component<RootDependency>, LoggedOutDependency, LoggedInDep
     }
     
     func loggedInComponent(player1Name: String, player2Name: String) -> LoggedInComponent {
-        LoggedInComponent(dependency: self, player1Name: player1Name, player2Name: player2Name)
+        LoggedInComponent(parent: self, player1Name: player1Name, player2Name: player2Name)
     }
 }

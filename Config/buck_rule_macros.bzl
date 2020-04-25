@@ -298,3 +298,19 @@ def mlmodel_resource(
         ],
         files = [],
     )
+
+# Takes in parameters generates BuildConfig that contains Info.plist metadata
+# for static libraries
+# - parameter name: The name of the module 
+# - parameter name: The module identifier 
+# - parameter name: The semantic version of the module
+def buildconfig_gen(
+        name,
+        bundle_identifier,
+        version):
+    # Create a single resource that can be depended on for the mlmodelc.
+    args_list = [name, bundle_identifier, version]
+    native.xcode_prebuild_script(
+        name = 'BuildConfigurationGeneration'+name,
+        cmd = '"${REPO_ROOT}/scripts/gen-build-config.sh"' + " " + " ".join(args_list),
+    )

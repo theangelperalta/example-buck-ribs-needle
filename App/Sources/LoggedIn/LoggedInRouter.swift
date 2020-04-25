@@ -69,6 +69,11 @@ final class LoggedInRouter: Router<LoggedInInteractable>, LoggedInRouting {
         detachCurrentChild()
         attachOffGame()
     }
+    
+    func routeToPlugin(id: String) {
+        detachCurrentChild()
+        attachPlugin(id: id)
+    }
 
     // MARK: - Private
 
@@ -81,7 +86,7 @@ final class LoggedInRouter: Router<LoggedInInteractable>, LoggedInRouting {
     
     private func attachPlugin(id: String) {
         guard let plugin = loggedInPluginFactory.getPlugin(id: id)?.builder.build(withListener: interactor) else {
-            print("Plugin with id: \(id) doesn't exist!")
+            print("Plugin with id: \(id) does not exist!")
             return
         }
         

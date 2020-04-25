@@ -19,6 +19,6 @@ import NeedleFoundation
 
 class AppComponent: BootstrapComponent , RootDependency {
     var rootComponent : RootComponent{
-        RootComponent(dependency: self)
+        RootComponent(parent: self)
     }
 }

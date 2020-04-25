@@ -29,10 +29,10 @@ protocol ScoreSheetBuildable: LoggedInPluginBuildable {
 
 public final class ScoreSheetBuilder: ComponentizedBuilder<ScoreSheetComponent, ScoreSheetRouting, ScoreSheetListener, Void>, ScoreSheetBuildable, ILoggedInPlugin {
     
-    private let bundle = Bundle(for: ScoreSheetBuildable.self as! AnyClass)
+    private let bundle = Bundle(for: ScoreSheetBuilder.self)
     
     public var id: String {
-        bundle.bundleIdentifier ?? ""
+        !BuildConfig.bundleIdentifier.isEmpty ? BuildConfig.bundleIdentifier : "com.tictactoe.core.loggedin.plugin.scoresheet"
     }
     
     public var builder: LoggedInPluginBuildable {
