@@ -3,15 +3,10 @@ load("//Config:buck_rule_macros.bzl", "first_party_library", "buildconfig_gen")
 
 first_party_library(
     name = "ScoreSheet",
+    bundle_identifier = "com.loggedin.plugin.ScoreSheet",
+    version = "1.0.0",
     deps = [
         "//Libraries/Models:Models",
         "//Libraries/LoggedInPlugin:LoggedInPlugin",
-        ":BuildConfigurationGenerationScoreSheet",
     ],
-)
-
-buildconfig_gen(
-    name="ScoreSheet",
-    bundle_identifier="com.loggedin.plugin.ScoreSheet",
-    version="1.0.0",
 )

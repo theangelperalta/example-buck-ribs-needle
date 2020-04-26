@@ -139,6 +139,10 @@ def apple_lib(
 # 2. An apple_test target comprising the test code in the Tests/ directory. This test target is picked up by Xcode, and is runnable from Buck.
 # 3. An apple_library target comprising the code in the Tests/ directory. This library is used by the apple_test_all macro to create a single apple_test target in CI. This library will not be included in Xcode, unless an Xcode project is generated that relies on an apple_test_all target.
 # - parameter name: The name of the apple_library created for the code in the Sources/ directory.
+# ****** If bundle_identifier is passed the BuildConfig file is generated, which can be used in place of Info.plist for static libraries.
+# - parameter bundle_identifier: The bundle_identifier of the apple_library created for the code in the Sources/ directory.
+# - parameter version: The version of the apple_library created for the code in the Sources/ directory.
+# ******
 # - parameter has_objective_c: When set to True, the libraries and tests will look for Objective-C headers and files.
 # - parameter internal_headers: An array of Objective-C headers that should be included in the library target, but should not be exported.
 # - parameter mlmodel_generated_source: A list of generated interface source files for mlmodels.
@@ -146,6 +150,8 @@ def apple_lib(
 # - parameter suppress_warnings: When set to True, the source library created will not show any warnings, even if warnings exist.
 def first_party_library(
         name,
+        bundle_identifier = "",
+        version = "0.0.1",
         has_objective_c = False,
         has_cpp = False,
         internal_headers = None,
@@ -167,6 +173,13 @@ def first_party_library(
         **kwargs):
     sources = native.glob(["Sources/**/*.swift"])
     exported_headers = None
+    if bundle_identifier:
+        buildconfig_gen(
+            name=name,
+            bundle_identifier=bundle_identifier,
+            version=version,
+        )
+        sources.extend([":BuildConfiguration"+name])
     if has_objective_c or has_cpp:
         sources.extend(native.glob(["Sources/**/*.m"]))
         if has_cpp:
@@ -310,7 +323,8 @@ def buildconfig_gen(
         version):
     # Create a single resource that can be depended on for the mlmodelc.
     args_list = [name, bundle_identifier, version]
-    native.xcode_prebuild_script(
-        name = 'BuildConfigurationGeneration'+name,
-        cmd = '"${REPO_ROOT}/scripts/gen-build-config.sh"' + " " + " ".join(args_list),
+    native.genrule(
+        name = 'BuildConfiguration'+name,
+        bash = '"$buck_root/scripts/gen-build-config.sh"' + " " + "$OUT" + " " + " ".join(args_list),
+        out = 'BuildConfig.swift',
     )
