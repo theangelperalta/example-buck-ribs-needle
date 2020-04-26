@@ -3,6 +3,7 @@
 
 # Use local version of Buck
 BUCK=tools/buck
+export buck_root=$(shell $(BUCK) root)
 
 log:
 	echo "Make"
@@ -28,10 +29,10 @@ message:
 	$(BUCK) build //App:ExampleMessageExtension
 
 debug:
-	$(BUCK) install //App:TicTacToeApp --run --simulator-name 'iPhone XS'
+	$(BUCK) install //App:TicTacToeApp --run --simulator-name 'iPhone 11'
 
 debug_release:
-	$(BUCK) install //App:TicTacToeApp --run --simulator-name 'iPhone XS' --config-file ./BuildConfigurations/Release.buckconfig
+	$(BUCK) install //App:TicTacToeApp --run --simulator-name 'iPhone 11' --config-file ./BuildConfigurations/Release.buckconfig
 
 targets:
 	$(BUCK) targets //...
@@ -40,7 +41,7 @@ ci: install_buck targets build test ui_test project xcode_tests watch message
 	echo "Done"
 
 
-buck_out = $(shell $(BUCK) root)/buck-out
+buck_out = $buck_root/buck-out
 test:
 	@rm -f $(buck_out)/tmp/*.profraw
 	@rm -f $(buck_out)/gen/*.profdata

@@ -133,7 +133,7 @@ xcode_postbuild_script(
 
 genrule(
   name = 'Needle',
-  bash = 'export SOURCEKIT_LOGGING=0 && ROOT=$REPO_ROOT && SRCS=$ROOT/App/Sources && $ROOT/Carthage/Checkouts/needle/Generator/bin/needle generate $OUT $SRCS $ROOT/Libraries/  --pluginized --header-doc $ROOT/copyright_header.txt',
+  bash = 'export SOURCEKIT_LOGGING=0 && SRCS=$buck_root/App/Sources && $buck_root/Carthage/Checkouts/needle/Generator/bin/needle generate $OUT $SRCS $buck_root/Libraries/  --pluginized --header-doc $buck_root/copyright_header.txt',
   out = 'NeedleGenerationCore.swift'
 )
 
