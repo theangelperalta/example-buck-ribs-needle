@@ -57,6 +57,10 @@ final class LoggedInInteractor: Interactor, LoggedInInteractable {
     func startTicTacToe() {
         router?.routeToTicTacToe()
     }
+    
+    func showPlugin(id: String) {
+        router?.routeToPlugin(id: id)
+    }
 
     // MARK: - TicTacToeListener
 
@@ -67,8 +71,7 @@ final class LoggedInInteractor: Interactor, LoggedInInteractable {
             mutableScoreStream.updateScore(withWinner: .draw)
         }
         
-//        router?.routeToOffGame()
-        router?.routeToPlugin(id: "com.loggedin.plugin.ScoreSheet")
+        router?.routeToOffGame()
     }
     
     // MARK: - LoggedInPluginListener

@@ -39,6 +39,21 @@ class RootComponent: Component<RootDependency>, LoggedOutDependency, LoggedInDep
     var loggedOutComponent: LoggedOutComponent {
         return LoggedOutComponent(dependency: self)
     }
+
+    var configuration: [String:Any] {
+        [
+            LoggedIn.ribID: [
+                LoggedIn.plugins: [
+                    [
+                        "com.loggedin.plugin.ScoreSheet": [
+                                "default":true,
+                                "displayName" : "Leader Board"
+                            ]
+                    ]
+                ]
+            ]
+        ]
+    }
     
     func loggedInComponent(player1Name: String, player2Name: String) -> LoggedInComponent {
         LoggedInComponent(parent: self, player1Name: player1Name, player2Name: player2Name)

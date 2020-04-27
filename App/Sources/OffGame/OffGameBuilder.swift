@@ -25,8 +25,12 @@ protocol OffGameBuildable: Buildable {
 final class OffGameBuilder: ComponentizedBuilder<OffGameComponent, OffGameRouting, OffGameListener, Void>, OffGameBuildable {
     
     override func build(with component: OffGameComponent, _ listener: OffGameListener) -> OffGameRouting {
-        let viewController = OffGameViewController(player1Name: component.dependency.player1Name,
-        player2Name: component.dependency.player2Name)
+        let viewController = OffGameViewController(
+            player1Name: component.dependency.player1Name,
+            player2Name: component.dependency.player2Name,
+            pluginID: component.dependency.pluginID,
+            configuration: component.dependency.configuration
+        )
         let interactor = OffGameInteractor(presenter: viewController, scoreStream: component.dependency.scoreStream)
         interactor.listener = listener
 

@@ -14,6 +14,8 @@ protocol OffGameDependency: Dependency {
     var player1Name: String { get }
     var player2Name: String { get }
     var scoreStream: ScoreStream { get }
+    var pluginID: String { get }
+    var configuration: [String:Any] { get }
 }
 
 final class OffGameComponent: Component<OffGameDependency> {

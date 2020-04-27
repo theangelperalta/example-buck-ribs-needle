@@ -23,6 +23,7 @@ import Models
 
 protocol OffGamePresentableListener: class {
     func startGame()
+    func showPlugin(id: String)
 }
 
 final class OffGameViewController: UIViewController, OffGamePresentable, OffGameViewControllable {
@@ -32,9 +33,11 @@ final class OffGameViewController: UIViewController, OffGamePresentable, OffGame
 
     weak var listener: OffGamePresentableListener?
 
-    init(player1Name: String, player2Name: String) {
+    init(player1Name: String, player2Name: String, pluginID: String, configuration: [String:Any]) {
         self.player1Name = player1Name
         self.player2Name = player2Name
+        self.pluginID = pluginID
+        self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -44,10 +47,7 @@ final class OffGameViewController: UIViewController, OffGamePresentable, OffGame
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = UIColor.yellow
-        buildPlayerLabels()
-        buildStartButton()
+        setupView()
     }
 
     // MARK: - OffGamePresentable
@@ -60,14 +60,30 @@ final class OffGameViewController: UIViewController, OffGamePresentable, OffGame
 
     private let player1Name: String
     private let player2Name: String
+    private let pluginID: String
+    private let configuration: [String:Any]
 
     private var player1Label: UILabel?
     private var player2Label: UILabel?
     private var drawLabel: UILabel?
     private var score: Score?
+    
+    private var startButton: UIButton?
+    private var showPluginButton: UIButton?
+    
+    private func setupView() {
+        view.backgroundColor = UIColor.yellow
+        buildPlayerLabels()
+        buildStartButton()
+        
+        if let plugins = configuration[LoggedIn.plugins] as? [String:Any], let plugin = plugins[pluginID] as? [String:Any], let displayName = plugin["displayName"] as? String {
+            buildShowPluginButton(title: displayName)
+        }
+    }
 
     private func buildStartButton() {
-        let startButton = UIButton()
+        startButton = UIButton()
+        guard let startButton = startButton else { return }
         view.addSubview(startButton)
         startButton.snp.makeConstraints { (maker: ConstraintMaker) in
 //            maker.center.equalTo(self.view.snp.center)
@@ -87,6 +103,28 @@ final class OffGameViewController: UIViewController, OffGamePresentable, OffGame
             .disposed(by: disposeBag)
     }
 
+    private func buildShowPluginButton(title: String) {
+        showPluginButton = UIButton()
+        guard let showPluginButton = showPluginButton else { return }
+        view.addSubview(showPluginButton)
+        showPluginButton.snp.makeConstraints { (maker: ConstraintMaker) in
+            //            maker.center.equalTo(self.view.snp.center)
+            maker.top.greaterThanOrEqualTo(startButton!.snp.bottom).offset(20)
+            maker.leading.trailing.equalTo(self.view).inset(40)
+            maker.height.equalTo(100)
+        }
+        showPluginButton.setTitle(title, for: .normal)
+        showPluginButton.setTitleColor(UIColor.white, for: .normal)
+        showPluginButton.backgroundColor = UIColor.black
+        showPluginButton.rx.tap
+            .subscribe(
+                onNext: { [weak self] in
+                    self?.listener?.showPlugin(id: self?.pluginID ?? "")
+                }
+        )
+            .disposed(by: disposeBag)
+    }
+    
     private func buildPlayerLabels() {
         let labelBuilder: (UIColor) -> UILabel = { (color: UIColor) in
             let label = UILabel()

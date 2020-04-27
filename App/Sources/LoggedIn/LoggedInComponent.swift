@@ -12,11 +12,17 @@ import Models
 protocol LoggedInDependency: Dependency {
     var viewController: LoggedInViewControllable { get }
     var playersStream: PlayersStream { get }
+    var configuration: [String:Any] { get }
 }
 
 protocol LoggedInPluginExtension: PluginExtension {
     var loggedInPluginFactory: ILoggedInPluginFactory { get }
     var mutableScoreStream: MutableScoreStream { get }
+}
+
+enum LoggedIn {
+    static let ribID = "com.tictactoe.loggedin"
+    static let plugins = "\(ribID).plugins"
 }
 
 final class LoggedInComponent: PluginizedComponent<LoggedInDependency, LoggedInPluginExtension, LoggedInNonCoreComponent>, OffGameDependency, TicTacToeDependency {
@@ -43,6 +49,15 @@ final class LoggedInComponent: PluginizedComponent<LoggedInDependency, LoggedInP
     
     var loggedInPluginFactory: ILoggedInPluginFactory {
         pluginExtension.loggedInPluginFactory
+    }
+
+    var pluginID: String {
+//        (((dependency.configuration[LoggedIn.ribID] as? [String:Any])?[LoggedIn.plugins] as? [String:Any]) as? [String:Any]) ?? ""
+        "com.loggedin.plugin.ScoreSheet"
+    }
+
+    var configuration: [String:Any] {
+        dependency.configuration[LoggedIn.ribID] as? [String:Any] ?? [:]
     }
     
     // TODO: Implement properties to provide for OffGame scope.
