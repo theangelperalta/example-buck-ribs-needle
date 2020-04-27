@@ -45,7 +45,7 @@ class RootComponent: Component<RootDependency>, LoggedOutDependency, LoggedInDep
             LoggedIn.ribID: [
                 LoggedIn.plugins: [
                     "com.loggedin.plugin.ScoreSheet": [
-                        "default":true,
+                        "enabled": true,
                         "displayName" : "Leader Board"
                     ]
                 ]

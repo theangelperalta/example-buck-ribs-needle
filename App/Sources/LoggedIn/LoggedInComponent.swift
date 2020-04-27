@@ -53,7 +53,7 @@ final class LoggedInComponent: PluginizedComponent<LoggedInDependency, LoggedInP
     }
 
     var pluginID: String {
-        let pluginID = plugins.keys.first { (plugins[$0] as? [String:Any])?["default"] as? Bool ?? false }
+        let pluginID = plugins.keys.first { (plugins[$0] as? [String:Any])?["enabled"] as? Bool ?? false }
         return pluginID ?? ""
     }
     
