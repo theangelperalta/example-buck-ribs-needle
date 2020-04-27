@@ -33,11 +33,11 @@ final class OffGameViewController: UIViewController, OffGamePresentable, OffGame
 
     weak var listener: OffGamePresentableListener?
 
-    init(player1Name: String, player2Name: String, pluginID: String, configuration: [String:Any]) {
+    init(player1Name: String, player2Name: String, pluginID: String, pluginDisplayName: String) {
         self.player1Name = player1Name
         self.player2Name = player2Name
         self.pluginID = pluginID
-        self.configuration = configuration
+        self.pluginDisplayName = pluginDisplayName
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -61,7 +61,7 @@ final class OffGameViewController: UIViewController, OffGamePresentable, OffGame
     private let player1Name: String
     private let player2Name: String
     private let pluginID: String
-    private let configuration: [String:Any]
+    private let pluginDisplayName: String
 
     private var player1Label: UILabel?
     private var player2Label: UILabel?
@@ -76,8 +76,8 @@ final class OffGameViewController: UIViewController, OffGamePresentable, OffGame
         buildPlayerLabels()
         buildStartButton()
         
-        if let plugins = configuration[LoggedIn.plugins] as? [String:Any], let plugin = plugins[pluginID] as? [String:Any], let displayName = plugin["displayName"] as? String {
-            buildShowPluginButton(title: displayName)
+        if !pluginID.isEmpty && !pluginDisplayName.isEmpty {
+            buildShowPluginButton(title: pluginDisplayName)
         }
     }
 

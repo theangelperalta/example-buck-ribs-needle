@@ -15,6 +15,7 @@ protocol OffGameDependency: Dependency {
     var player2Name: String { get }
     var scoreStream: ScoreStream { get }
     var pluginID: String { get }
+    var pluginDisplayName: String { get }
     var configuration: [String:Any] { get }
 }
 

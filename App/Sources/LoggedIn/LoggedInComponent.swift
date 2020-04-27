@@ -6,6 +6,7 @@
 //
 
 import NeedleFoundation
+import LoggedInPlugin
 import LoggedInPluginPoint
 import Models
 
@@ -52,8 +53,20 @@ final class LoggedInComponent: PluginizedComponent<LoggedInDependency, LoggedInP
     }
 
     var pluginID: String {
-//        (((dependency.configuration[LoggedIn.ribID] as? [String:Any])?[LoggedIn.plugins] as? [String:Any]) as? [String:Any]) ?? ""
-        "com.loggedin.plugin.ScoreSheet"
+        let pluginID = plugins.keys.first { (plugins[$0] as? [String:Any])?["default"] as? Bool ?? false }
+        return pluginID ?? ""
+    }
+    
+    var pluginDisplayName: String {
+        (plugins[pluginID] as? [String:Any])?["displayName"] as? String ?? ""
+    }
+    
+    fileprivate var plugin: ILoggedInPlugin? {
+        loggedInPluginFactory.getPlugin(id: pluginID)
+    }
+    
+    fileprivate var plugins: [String:Any] {
+        (dependency.configuration[LoggedIn.ribID] as? [String:Any])?[LoggedIn.plugins] as? [String : Any] ?? [:]
     }
 
     var configuration: [String:Any] {

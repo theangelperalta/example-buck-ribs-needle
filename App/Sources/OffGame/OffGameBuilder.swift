@@ -29,7 +29,7 @@ final class OffGameBuilder: ComponentizedBuilder<OffGameComponent, OffGameRoutin
             player1Name: component.dependency.player1Name,
             player2Name: component.dependency.player2Name,
             pluginID: component.dependency.pluginID,
-            configuration: component.dependency.configuration
+            pluginDisplayName: component.dependency.pluginDisplayName
         )
         let interactor = OffGameInteractor(presenter: viewController, scoreStream: component.dependency.scoreStream)
         interactor.listener = listener
