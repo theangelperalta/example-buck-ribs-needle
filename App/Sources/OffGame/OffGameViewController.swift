@@ -68,28 +68,44 @@ final class OffGameViewController: UIViewController, OffGamePresentable, OffGame
     private var drawLabel: UILabel?
     private var score: Score?
     
+    private var btnStackView: UIStackView?
     private var startButton: UIButton?
     private var showPluginButton: UIButton?
     
     private func setupView() {
         view.backgroundColor = UIColor.yellow
-        buildPlayerLabels()
+        buildBtnStackView()
         buildStartButton()
         
         if !pluginID.isEmpty && !pluginDisplayName.isEmpty {
             buildShowPluginButton(title: pluginDisplayName)
+        } else {
+            // If showing ScoreSheet or other plugin buttons
+            // we want to hide these UI elements
+            buildPlayerLabels()
         }
+    }
+    
+    private func buildBtnStackView()
+    {
+        btnStackView = UIStackView()
+        guard let btnStackView = btnStackView else { return }
+        view.addSubview(btnStackView)
+        btnStackView.snp.makeConstraints { (maker: ConstraintMaker) in
+            maker.leading.trailing.equalTo(view).inset(40)
+            maker.bottom.equalTo(view.snp_bottom).inset(30)
+        }
+        btnStackView.axis = .vertical
+        btnStackView.alignment = .fill
+        btnStackView.spacing = 20
     }
 
     private func buildStartButton() {
         startButton = UIButton()
         guard let startButton = startButton else { return }
-        view.addSubview(startButton)
+        btnStackView?.addArrangedSubview(startButton)
         startButton.snp.makeConstraints { (maker: ConstraintMaker) in
-//            maker.center.equalTo(self.view.snp.center)
-            maker.top.greaterThanOrEqualTo(player2Label!.snp.bottom).offset(20)
-            maker.leading.trailing.equalTo(self.view).inset(40)
-            maker.height.equalTo(100)
+            maker.height.equalTo(50)
         }
         startButton.setTitle("Start Game", for: .normal)
         startButton.setTitleColor(UIColor.white, for: .normal)
@@ -106,12 +122,9 @@ final class OffGameViewController: UIViewController, OffGamePresentable, OffGame
     private func buildShowPluginButton(title: String) {
         showPluginButton = UIButton()
         guard let showPluginButton = showPluginButton else { return }
-        view.addSubview(showPluginButton)
+        btnStackView?.addArrangedSubview(showPluginButton)
         showPluginButton.snp.makeConstraints { (maker: ConstraintMaker) in
-            //            maker.center.equalTo(self.view.snp.center)
-            maker.top.greaterThanOrEqualTo(startButton!.snp.bottom).offset(20)
-            maker.leading.trailing.equalTo(self.view).inset(40)
-            maker.height.equalTo(100)
+            maker.height.equalTo(50)
         }
         showPluginButton.setTitle(title, for: .normal)
         showPluginButton.setTitleColor(UIColor.white, for: .normal)

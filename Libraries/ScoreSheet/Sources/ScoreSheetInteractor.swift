@@ -42,4 +42,9 @@ final class ScoreSheetInteractor: PresentableInteractor<ScoreSheetPresentable>, 
         super.willResignActive()
         // TODO: Pause any business logic.
     }
+    
+    // MARK: ScoreSheetPresentableListener
+    func close() {
+        listener?.done()
+    }
 }
