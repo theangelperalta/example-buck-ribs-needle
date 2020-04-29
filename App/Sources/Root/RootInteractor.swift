@@ -20,7 +20,7 @@ import Foundation
 import Models
 
 protocol RootRouting: ViewableRouting {
-    func routeToLoggedIn(withPlayer1Name player1Name: String, player2Name: String)
+    func routeToConfiguration()
 }
 
 protocol RootPresentable: Presentable {
@@ -57,13 +57,6 @@ final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteract
         super.willResignActive()
         // TODO: Pause any business logic.
     }
-
-    // MARK: - LoggedOutListener
-
-    func didLogin(withPlayer1Name player1Name: String, player2Name: String) {
-        mutablePlayersStream.update(player1: player1Name, player2: player2Name)
-        router?.routeToLoggedIn(withPlayer1Name: player1Name, player2Name: player2Name)
-    }
     
     // MARK: - UrlHandler
 
@@ -73,18 +66,5 @@ final class RootInteractor: PresentableInteractor<RootPresentable>, RootInteract
 //            .subscribe(self)
 //            .disposeOnDeactivate(interactor: self)
     }
-    
-    // MARK: - RootActionableItem
-
-//    func waitForLogin() -> Observable<(LoggedInActionableItem, ())> {
-//        return loggedInActionableItemSubject
-//            .map { (loggedInItem: LoggedInActionableItem) -> (LoggedInActionableItem, ()) in
-//                (loggedInItem, ())
-//        }
-//    }
-
-    // MARK: - Private
-
-//    private let loggedInActionableItemSubject = ReplaySubject<LoggedInActionableItem>.create(bufferSize: 1)
 
 }

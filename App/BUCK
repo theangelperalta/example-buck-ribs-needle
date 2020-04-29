@@ -66,6 +66,7 @@ apple_library(
     swift_version = "4.0",
     srcs = glob([
         "Sources/AppStart/*",
+        "Sources/Configuration/*",
         "Sources/Root/*",
         "Sources/LoggedIn/*",
         "Sources/LoggedOut/*",

@@ -14,7 +14,7 @@ protocol RootDependency: Dependency {
     // created by this RIB.
 }
 
-class RootComponent: Component<RootDependency>, LoggedOutDependency, LoggedInDependency {
+class RootComponent: Component<RootDependency>, ConfigurationDependency {
     
     var playersStream: PlayersStream {
         return mutablePlayersStream
@@ -28,32 +28,15 @@ class RootComponent: Component<RootDependency>, LoggedOutDependency, LoggedInDep
         return shared { RootViewController() }
     }
     
-    var viewController: LoggedInViewControllable {
+    var viewController: ConfigurationViewControllable {
         return rootViewController
     }
     
     var interactor: RootInteractor {
         return shared { RootInteractor(presenter: rootViewController, mutablePlayersStream: mutablePlayersStream) }
     }
-
-    var loggedOutComponent: LoggedOutComponent {
-        return LoggedOutComponent(dependency: self)
-    }
-
-    var configuration: [String:Any] {
-        [
-            LoggedIn.ribID: [
-                LoggedIn.plugins: [
-                    "com.loggedin.plugin.ScoreSheet": [
-                        "enabled": true,
-                        "displayName" : "Leader Board"
-                    ]
-                ]
-            ]
-        ]
-    }
     
-    func loggedInComponent(player1Name: String, player2Name: String) -> LoggedInComponent {
-        LoggedInComponent(parent: self, player1Name: player1Name, player2Name: player2Name)
+    var configurationComponent: ConfigurationComponent {
+        return ConfigurationComponent(parent: self)
     }
 }

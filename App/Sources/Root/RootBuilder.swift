@@ -31,16 +31,12 @@ final class RootBuilder: SimpleComponentizedBuilder<RootComponent, LaunchRouting
     }
     
     override func build(with component: RootComponent) -> LaunchRouting {
-        let loggedOutBuilder = LoggedOutBuilder {
-            component.loggedOutComponent
-        }
-        let loggedInBuilder = LoggedInBuilder { player1Name, player2Name in
-            component.loggedInComponent(player1Name: player1Name, player2Name: player2Name)
+        let configurationBuilder = ConfigurationBuilder { configuration in
+            component.configurationComponent
         }
         let router = RootRouter(interactor: component.interactor,
                                 viewController: component.rootViewController,
-                                loggedOutBuilder: loggedOutBuilder,
-                                loggedInBuilder: loggedInBuilder)
+                                configurationBuilder: configurationBuilder)
 
         return router
     }
