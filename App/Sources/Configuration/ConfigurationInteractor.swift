@@ -27,11 +27,13 @@ final class ConfigurationInteractor: Interactor, ConfigurationInteractable, UrlH
     weak var listener: ConfigurationListener?
     
     private let mutablePlayersStream: MutablePlayersStream
+    private let mutableConfigurationStream: MutableConfigurationStream
     
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
-    init(mutablePlayersStream: MutablePlayersStream) {
+    init(mutablePlayersStream: MutablePlayersStream, mutableConfigurationStream: MutableConfigurationStream) {
         self.mutablePlayersStream = mutablePlayersStream
+        self.mutableConfigurationStream = mutableConfigurationStream
     }
     
     override func didBecomeActive() {
@@ -43,8 +45,8 @@ final class ConfigurationInteractor: Interactor, ConfigurationInteractable, UrlH
                     LoggedIn.ribID: [
                         LoggedIn.plugins: [
                             "com.loggedin.plugin.ScoreSheet": [
-                                "enabled": true,
-                                "displayName" : "Leader Board"
+                                "enabled": Int.random(in: 0 ... 1) > 0 ? true : false,
+                                "displayName" : Int.random(in: 0 ... 1) > 0 ? "Leader Board" : "Score Sheet"
                             ]
                         ]
                     ]
@@ -69,6 +71,7 @@ final class ConfigurationInteractor: Interactor, ConfigurationInteractable, UrlH
     
     
     private func didReceive(configuration: [String:Any]) {
+        mutableConfigurationStream.publish(configuration: configuration)
         router?.routeToLoggedOut()
     }
     

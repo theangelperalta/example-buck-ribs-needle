@@ -19,4 +19,10 @@ protocol ScoreSheetPresentableListener: class {
 final class ScoreSheetViewController: UIViewController, ScoreSheetPresentable, ScoreSheetViewControllable {
 
     weak var listener: ScoreSheetPresentableListener?
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        view.backgroundColor = .blue
+    }
 }

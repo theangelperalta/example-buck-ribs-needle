@@ -22,7 +22,7 @@ final class ConfigurationComponent: Component<ConfigurationDependency>, LoggedOu
     // TODO: Declare 'fileprivate' dependencies that are only used by this RIB.
     
     var interactor: ConfigurationInteractor {
-        return shared { ConfigurationInteractor(mutablePlayersStream: mutablePlayersStream) }
+        return shared { ConfigurationInteractor(mutablePlayersStream: mutablePlayersStream, mutableConfigurationStream: mutableConfigurationStream) }
     }
     
     var viewController: LoggedInViewControllable {
@@ -37,18 +37,15 @@ final class ConfigurationComponent: Component<ConfigurationDependency>, LoggedOu
         return dependency.playersStream
     }
     
-    var configuration: [String:Any] {
-        [
-            LoggedIn.ribID: [
-                LoggedIn.plugins: [
-                    "com.loggedin.plugin.ScoreSheet": [
-                        "enabled": false,
-                        "displayName" : "Leader Board"
-                    ]
-                ]
-            ]
-        ]
+    var mutableConfigurationStream: MutableConfigurationStream {
+        return shared { MutableConfigurationStream() }
     }
+    
+    var configurationStream: ConfigurationStream {
+        return mutableConfigurationStream
+    }
+    
+    var configuration: [String:Any] = [:]
     
     var loggedOutComponent: LoggedOutComponent {
         return LoggedOutComponent(dependency: self)
@@ -56,5 +53,13 @@ final class ConfigurationComponent: Component<ConfigurationDependency>, LoggedOu
     
     func loggedInComponent(player1Name: String, player2Name: String) -> LoggedInComponent {
         LoggedInComponent(parent: self, player1Name: player1Name, player2Name: player2Name)
+    }
+    
+    override init(parent: Scope) {
+        super.init(parent: parent)
+        
+        configurationStream.configurations.subscribe { configuration in
+            self.configuration = configuration.element ?? [:]
+        }
     }
 }

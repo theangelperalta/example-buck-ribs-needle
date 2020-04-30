@@ -23,7 +23,7 @@ final class ConfigurationBuilder: ComponentizedBuilder<ConfigurationComponent, C
     }
 
     override func build(with component: ConfigurationComponent, _ listener: ConfigurationListener) -> ConfigurationRouting {
-        let interactor = ConfigurationInteractor(mutablePlayersStream: component.mutablePlayersStream)
+        let interactor = ConfigurationInteractor(mutablePlayersStream: component.mutablePlayersStream, mutableConfigurationStream: component.mutableConfigurationStream)
         
         let loggedOutBuilder = LoggedOutBuilder {
             component.loggedOutComponent

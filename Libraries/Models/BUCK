@@ -4,5 +4,6 @@ first_party_library(
     name = "Models",
     deps = [
         "//Pods:RxSwift",
+        "//Pods:RxRelay",
     ],
 )
