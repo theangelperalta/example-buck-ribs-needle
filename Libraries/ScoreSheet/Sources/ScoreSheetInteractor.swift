@@ -8,6 +8,8 @@
 import RIBs
 import RxSwift
 import LoggedInPlugin
+import Models
+
 public protocol ScoreSheetRouting: ViewableRouting {
     // TODO: Declare methods the interactor can invoke to manage sub-tree via the router.
 }
@@ -15,6 +17,7 @@ public protocol ScoreSheetRouting: ViewableRouting {
 protocol ScoreSheetPresentable: Presentable {
     var listener: ScoreSheetPresentableListener? { get set }
     // TODO: Declare methods the interactor can invoke the presenter to present data.
+    func set(score: Score)
 }
 
 public protocol ScoreSheetListener: LoginPluginListener {

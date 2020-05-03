@@ -18,7 +18,6 @@ protocol LoggedInDependency: Dependency {
 
 protocol LoggedInPluginExtension: PluginExtension {
     var loggedInPluginFactory: ILoggedInPluginFactory { get }
-    var mutableScoreStream: MutableScoreStream { get }
 }
 
 enum LoggedIn {

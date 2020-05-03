@@ -8,6 +8,7 @@
 import RIBs
 import RxSwift
 import UIKit
+import Models
 
 protocol ScoreSheetPresentableListener: class {
     // TODO: Declare properties and methods that the view controller can invoke to perform
@@ -20,9 +21,46 @@ final class ScoreSheetViewController: UIViewController, ScoreSheetPresentable, S
 
     weak var listener: ScoreSheetPresentableListener?
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        view.backgroundColor = .blue
+    init(player1Name: String, player2Name: String) {
+        self.player1Name = player1Name
+        self.player2Name = player2Name
+        super.init(nibName: nil, bundle: nil)
     }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Method is not supported")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupView()
+        print("Scoresheet - Player 1: \(player1Name), Player 2: \(player2Name)")
+    }
+    
+    // MARK: - ScoreSheetPresentable
+
+    func set(score: Score) {
+        self.score = score
+    }
+
+    // MARK: - Private
+
+    private let player1Name: String
+    private let player2Name: String
+
+    private var player1Label: UILabel?
+    private var player2Label: UILabel?
+    private var drawLabel: UILabel?
+    private var score: Score?
+    
+    private var btnStackView: UIStackView?
+    private var startButton: UIButton?
+    private var showPluginButton: UIButton?
+    
+    private func setupView() {
+        view.backgroundColor = .blue
+        
+    }
+    
 }

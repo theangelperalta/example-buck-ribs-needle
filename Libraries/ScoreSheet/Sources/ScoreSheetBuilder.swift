@@ -15,6 +15,8 @@ public protocol ScoreSheetDependency: Dependency {
     // TODO: Declare the set of dependencies required by this RIB, but cannot be
     // created by this RIB.
     var scoreStream: ScoreStream { get }
+    var player1Name: String { get }
+    var player2Name: String { get }
 }
 
 public final class ScoreSheetComponent: Component<ScoreSheetDependency> {
@@ -24,10 +26,10 @@ public final class ScoreSheetComponent: Component<ScoreSheetDependency> {
 
 // MARK: - Builder
 
-protocol ScoreSheetBuildable: LoggedInPluginBuildable {
+protocol ScoreSheetBuildable: Buildable {
 }
 
-public final class ScoreSheetBuilder: ComponentizedBuilder<ScoreSheetComponent, ScoreSheetRouting, ScoreSheetListener, Void>, ScoreSheetBuildable, ILoggedInPlugin {
+public final class ScoreSheetBuilder: ComponentizedBuilder<ScoreSheetComponent, ScoreSheetRouting, LoginPluginListener, Void>, ScoreSheetBuildable, ILoggedInPlugin, LoggedInPluginBuildable {
     
     private let bundle = Bundle(for: ScoreSheetBuilder.self)
     
@@ -39,16 +41,16 @@ public final class ScoreSheetBuilder: ComponentizedBuilder<ScoreSheetComponent, 
         self
     }
     
-    
-    public func build(withListener listener: LoginPluginListener) -> ViewableRouting {
-//        let component = ScoreSheetComponent(dependency: dependency)
-        let viewController = ScoreSheetViewController()
+    public override func build(with component: ScoreSheetComponent, _ listener: LoginPluginListener) -> ScoreSheetRouting {
+        let viewController = ScoreSheetViewController(player1Name: component.dependency.player1Name, player2Name: component.dependency.player2Name)
         let interactor = ScoreSheetInteractor(presenter: viewController)
         interactor.listener = listener
         return ScoreSheetRouter(interactor: interactor, viewController: viewController)
     }
     
-    func build(withListener listener: ScoreSheetListener) -> ScoreSheetRouting {
+    
+    
+    public func build(withListener listener: LoginPluginListener) -> ViewableRouting {
         return build(withDynamicBuildDependency: listener,
         dynamicComponentDependency: ())
     }

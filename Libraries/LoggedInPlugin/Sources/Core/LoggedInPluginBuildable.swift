@@ -7,6 +7,6 @@
 
 import RIBs
 
-public protocol LoggedInPluginBuildable {
+public protocol LoggedInPluginBuildable: Buildable {
     func build(withListener listener: LoginPluginListener) -> ViewableRouting
 }

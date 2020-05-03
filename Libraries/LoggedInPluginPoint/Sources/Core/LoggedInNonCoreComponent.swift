@@ -9,8 +9,16 @@ import Models
 import NeedleFoundation
 import ScoreSheet
 
+public protocol LoggedInNonCoreDependency: Dependency {
+    var playersStream: PlayersStream { get }
+    var configuration: [String:Any] { get }
+    var mutableScoreStream: MutableScoreStream { get }
+    var player1Name: String { get }
+    var player2Name: String { get }
+}
+
 /// Component for the LoggedIn non core scope.
-public class LoggedInNonCoreComponent: NonCoreComponent<EmptyDependency>, ScoreSheetDependency {
+public class LoggedInNonCoreComponent: NonCoreComponent<LoggedInNonCoreDependency>, ScoreSheetDependency {
     
     var scoreSheetComponent: ScoreSheetComponent {
         return ScoreSheetComponent(dependency: self)
@@ -22,12 +30,16 @@ public class LoggedInNonCoreComponent: NonCoreComponent<EmptyDependency>, ScoreS
         }
     }
 
-    public var mutableScoreStream: MutableScoreStream {
-        return shared { ScoreStreamImpl() }
-    }
-
     public var scoreStream: ScoreStream {
-        return mutableScoreStream
+        return dependency.mutableScoreStream
+    }
+    
+    public var player1Name: String {
+        dependency.player1Name
+    }
+    
+    public var player2Name: String {
+        dependency.player2Name
     }
     
     public var loggedInPluginFactory: ILoggedInPluginFactory {
