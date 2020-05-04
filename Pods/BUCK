@@ -43,11 +43,18 @@ apple_third_party_lib(
 apple_third_party_lib(
     name = "RxCocoa",
     exported_headers = glob([
-        "RxCocoa/**/*.h",
+        "RxCocoa/**/RxCocoaRuntime.h",
+        "RxCocoa/**/_RX.h",
+        "RxCocoa/**/_RXDelegateProxy.h",
+        "RxCocoa/**/_RXKVOObserver.h",
+        "RxCocoa/**/_RXObjCRuntime.h",
     ]),
     srcs = glob([
-        "RxCocoa/**/*.m",
         "RxCocoa/**/*.swift",
+        "RxCocoa/**/*.m",
+        "RxCocoa/Platform/**/*.swift",
+    ], exclude = [
+        "RxCocoa/Platform/AtomicInt.swift",
     ]),
     deps = [
         "//Pods:RxSwift",

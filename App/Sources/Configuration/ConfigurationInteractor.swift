@@ -45,7 +45,8 @@ final class ConfigurationInteractor: Interactor, ConfigurationInteractable, UrlH
                     LoggedIn.ribID: [
                         LoggedIn.plugins: [
                             "com.loggedin.plugin.ScoreSheet": [
-                                "enabled": Int.random(in: 0 ... 1) > 0 ? true : false,
+//                                "enabled": Int.random(in: 0 ... 1) > 0 ? true : false,
+                                "enabled": true,
                                 "displayName" : Int.random(in: 0 ... 1) > 0 ? "Leader Board" : "Score Sheet"
                             ]
                         ]

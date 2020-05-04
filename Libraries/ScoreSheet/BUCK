@@ -8,5 +8,8 @@ first_party_library(
     deps = [
         "//Libraries/Models:Models",
         "//Libraries/LoggedInPlugin:LoggedInPlugin",
+        "//Pods:RxCocoa",
+        "//Pods:RxSwift",
+        "//Pods:SnapKit",
     ],
 )
