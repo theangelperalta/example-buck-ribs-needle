@@ -30,6 +30,7 @@ protocol TicTacToePresentable: Presentable {
 
 protocol TicTacToeListener: class {
     func gameDidEnd(withWinner winner: Player?)
+    func showPlugin(id: String)
 }
 
 final class TicTacToeInteractor: PresentableInteractor<TicTacToePresentable>, TicTacToeInteractable, TicTacToePresentableListener {
@@ -88,6 +89,10 @@ final class TicTacToeInteractor: PresentableInteractor<TicTacToePresentable>, Ti
             }
         }
         
+    }
+    
+    func showPlugin(id: String) {
+        listener?.showPlugin(id: id)
     }
 
     func closeGame() {

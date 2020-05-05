@@ -37,7 +37,6 @@ final class ScoreSheetViewController: UIViewController, ScoreSheetPresentable, S
         super.viewDidLoad()
         
         setupView()
-        print("Scoresheet - Player 1: \(player1Name), Player 2: \(player2Name)")
     }
     
     // MARK: - ScoreSheetPresentable

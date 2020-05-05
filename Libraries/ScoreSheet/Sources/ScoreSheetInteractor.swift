@@ -29,9 +29,12 @@ final class ScoreSheetInteractor: PresentableInteractor<ScoreSheetPresentable>, 
     weak var router: ScoreSheetRouting?
     weak var listener: LoginPluginListener?
 
+    private let scoreStream: ScoreStream
+
     // TODO: Add additional dependencies to constructor. Do not perform any logic
     // in constructor.
-    override init(presenter: ScoreSheetPresentable) {
+    init(presenter: ScoreSheetPresentable, scoreStream: ScoreStream) {
+        self.scoreStream = scoreStream
         super.init(presenter: presenter)
         presenter.listener = self
     }
@@ -39,11 +42,24 @@ final class ScoreSheetInteractor: PresentableInteractor<ScoreSheetPresentable>, 
     override func didBecomeActive() {
         super.didBecomeActive()
         // TODO: Implement business logic here.
+        updateScore()
     }
 
     override func willResignActive() {
         super.willResignActive()
         // TODO: Pause any business logic.
+    }
+
+    // MARK: Private
+    
+    private func updateScore() {
+    scoreStream.score
+        .subscribe(
+            onNext: { (score: Score) in
+                self.presenter.set(score: score)
+            }
+        )
+        .disposeOnDeactivate(interactor: self)
     }
     
     // MARK: ScoreSheetPresentableListener

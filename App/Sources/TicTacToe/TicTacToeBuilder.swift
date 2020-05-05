@@ -25,7 +25,7 @@ protocol TicTacToeBuildable: Buildable {
 final class TicTacToeBuilder: ComponentizedBuilder<TicTacToeComponent, TicTacToeRouting, TicTacToeListener, Void>, TicTacToeBuildable {
     
     override func build(with component: TicTacToeComponent, _ listener: TicTacToeListener) -> TicTacToeRouting {
-        let viewController = TicTacToeViewController()
+        let viewController = TicTacToeViewController(pluginID: component.dependency.pluginID, pluginDisplayName: component.dependency.pluginDisplayName)
         let interactor = TicTacToeInteractor(presenter: viewController, player1Name: component.dependency.player1Name, player2Name: component.dependency.player2Name)
         interactor.listener = listener
         return TicTacToeRouter(interactor: interactor, viewController: viewController)

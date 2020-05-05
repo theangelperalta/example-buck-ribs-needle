@@ -18,16 +18,21 @@ import RIBs
 import SnapKit
 import UIKit
 import Models
+import RxCocoa
+import RxSwift
 
 protocol TicTacToePresentableListener: class {
     func placeCurrentPlayerMark(atRow row: Int, col: Int)
+    func showPlugin(id: String)
 }
 
 final class TicTacToeViewController: UIViewController, TicTacToePresentable, TicTacToeViewControllable {
 
     weak var listener: TicTacToePresentableListener?
 
-    init() {
+    init(pluginID: String, pluginDisplayName: String) {
+        self.pluginID = pluginID
+        self.pluginDisplayName = pluginDisplayName
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -39,7 +44,7 @@ final class TicTacToeViewController: UIViewController, TicTacToePresentable, Tic
         super.viewDidLoad()
 
         view.backgroundColor = UIColor.yellow
-        buildCollectionView()
+        setupView()
     }
 
     // MARK: - TicTacToePresentable
@@ -73,6 +78,38 @@ final class TicTacToeViewController: UIViewController, TicTacToePresentable, Tic
     }
 
     // MARK: - Private
+    private let pluginID: String
+    private let pluginDisplayName: String
+    private var showPluginButton: UIButton?
+     private let disposeBag = DisposeBag()
+    
+    private func setupView() {
+        buildCollectionView()
+        if !pluginID.isEmpty && !pluginDisplayName.isEmpty {
+            buildShowPluginButton(title: pluginDisplayName)
+        }
+    }
+    
+    private func buildShowPluginButton(title: String) {
+        showPluginButton = UIButton()
+        guard let showPluginButton = showPluginButton else { return }
+        view.addSubview(showPluginButton)
+        showPluginButton.snp.makeConstraints { (maker: ConstraintMaker) in
+            maker.height.equalTo(50)
+            maker.top.equalTo(collectionView.snp_bottom).offset(40)
+            maker.leading.trailing.equalTo(view).inset(40)
+        }
+        showPluginButton.setTitle(title, for: .normal)
+        showPluginButton.setTitleColor(UIColor.white, for: .normal)
+        showPluginButton.backgroundColor = UIColor.black
+        showPluginButton.rx.tap
+            .subscribe(
+                onNext: { [weak self] in
+                    self?.listener?.showPlugin(id: self?.pluginID ?? "")
+                }
+        )
+            .disposed(by: disposeBag)
+    }
 
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()

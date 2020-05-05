@@ -43,7 +43,7 @@ public final class ScoreSheetBuilder: ComponentizedBuilder<ScoreSheetComponent, 
     
     public override func build(with component: ScoreSheetComponent, _ listener: LoginPluginListener) -> ScoreSheetRouting {
         let viewController = ScoreSheetViewController(player1Name: component.dependency.player1Name, player2Name: component.dependency.player2Name)
-        let interactor = ScoreSheetInteractor(presenter: viewController)
+        let interactor = ScoreSheetInteractor(presenter: viewController, scoreStream: component.dependency.scoreStream)
         interactor.listener = listener
         return ScoreSheetRouter(interactor: interactor, viewController: viewController)
     }

@@ -12,7 +12,7 @@ import ScoreSheet
 public protocol LoggedInNonCoreDependency: Dependency {
     var playersStream: PlayersStream { get }
     var configuration: [String:Any] { get }
-    var mutableScoreStream: MutableScoreStream { get }
+    var scoreStream: ScoreStream { get }
     var player1Name: String { get }
     var player2Name: String { get }
 }
@@ -31,7 +31,7 @@ public class LoggedInNonCoreComponent: NonCoreComponent<LoggedInNonCoreDependenc
     }
 
     public var scoreStream: ScoreStream {
-        return dependency.mutableScoreStream
+        return dependency.scoreStream
     }
     
     public var player1Name: String {
