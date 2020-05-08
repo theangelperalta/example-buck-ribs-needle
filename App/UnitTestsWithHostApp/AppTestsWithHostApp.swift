@@ -1,7 +1,7 @@
 import XCTest
-@testable import ExampleAppLibrary
+@testable import TicTacToeCore
 
-final class BuckSampleTests: XCTestCase {
+final class TicTacToeCoreTests: XCTestCase {
 
     func testExample() {
         // This is an example of a functional test case.

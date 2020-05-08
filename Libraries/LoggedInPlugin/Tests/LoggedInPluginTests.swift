@@ -1,11 +1,10 @@
 import XCTest
-@testable import TTTUtilties
+@testable import LoggedInPlugin
 
-final class SomeASwiftModuleTests: XCTestCase {
+final class LoggedInPluginTests: XCTestCase {
 
-  func testTTTUtiliesAdding() {
-    let sut = localizedString("HI", "HI")
-    XCTAssertEqual(!sut.isEmpty, true)
+  func testLoggedInPlugin() {
+     XCTAssertEqual(true, true)
   }
 
 }

@@ -4,6 +4,8 @@
 # Use local version of Buck
 BUCK=tools/buck
 export buck_root=$(shell $(BUCK) root)
+export buck_out=${buck_root}/buck-out
+IPHONE_SIMULATOR_NAME="iPhone 11"
 
 log:
 	echo "Make"
@@ -29,19 +31,17 @@ message:
 	$(BUCK) build //App:ExampleMessageExtension
 
 debug:
-	$(BUCK) install //App:TicTacToeApp --run --simulator-name 'iPhone 11'
+	$(BUCK) install //App:TicTacToeApp --run --simulator-name '${IPHONE_SIMULATOR_NAME}'
 
 debug_release:
-	$(BUCK) install //App:TicTacToeApp --run --simulator-name 'iPhone 11' --config-file ./BuildConfigurations/Release.buckconfig
+	$(BUCK) install //App:TicTacToeApp --run --simulator-name '${IPHONE_SIMULATOR_NAME}' --config-file ./BuildConfigurations/Release.buckconfig
 
 targets:
 	$(BUCK) targets //...
 
-ci: install_buck targets build test ui_test project xcode_tests watch message
+ci: install_buck targets build test ui_test project xcode_tests
 	echo "Done"
 
-
-buck_out = $buck_root/buck-out
 test:
 	@rm -f $(buck_out)/tmp/*.profraw
 	@rm -f $(buck_out)/gen/*.profdata
@@ -73,7 +73,7 @@ kill_xcode:
 	killall Simulator || true
 
 xcode_tests: project
-	xcodebuild build test -workspace App/TicTacToeApp.xcworkspace -scheme TicTacToeApp -destination 'platform=iOS Simulator,name=iPhone 8,OS=latest' | xcpretty && exit ${PIPESTATUS[0]}
+	xcodebuild build test -workspace App/TicTacToeApp.xcworkspace -scheme TicTacToeApp -destination 'platform=iOS Simulator,name=${IPHONE_SIMULATOR_NAME},OS=latest' | xcpretty && exit ${PIPESTATUS[0]}
 
 project: clean
 	$(BUCK) project //App:workspace

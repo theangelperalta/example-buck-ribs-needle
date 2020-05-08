@@ -1,11 +1,10 @@
 import XCTest
-@testable import TTTUtilties
+@testable import Models
 
-final class SomeASwiftModuleTests: XCTestCase {
+final class ModelsTests: XCTestCase {
 
-  func testTTTUtiliesAdding() {
-    let sut = localizedString("HI", "HI")
-    XCTAssertEqual(!sut.isEmpty, true)
+  func testModels() {
+    XCTAssertEqual(true, true)
   }
 
 }
