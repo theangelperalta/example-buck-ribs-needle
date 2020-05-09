@@ -1,7 +1,6 @@
 # example-buck-ribs-needle
 This repo shows how to build an iOS applications using Buck, RIBs, and Needle. Big thanks to the AirBnB team for their work on [BuckSample](https://github.com/airbnb/BuckSample), without this project, this work wouldn't be possible.
 
-[![CircleCI](https://circleci.com/gh/airbnb/BuckSample/tree/master.svg?style=svg)](https://circleci.com/gh/airbnb/BuckSample/tree/master)
 
 ### To Install
 
