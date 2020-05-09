@@ -33,7 +33,7 @@ To generate the project from the terminal, just run `make project`. You can then
 
 You may also use breakpoints, just like normal when using the generated Xcode project.
 
-<img src="Docs/Buck-RIBs-NeedleV1.0.0.png" width=500 />
+<img src="Docs/Breakpoint.png" width=500 />
 
 ### CLI
 
