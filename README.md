@@ -48,6 +48,7 @@ make debug
 ### References
 1. [Libraries/LoggedInPluginPoint](Libraries/LoggedInPluginPoint/Sources/Core/LoggedInNonCoreComponent.swift) gives an example how Plugin Point may be designed
 1. [AirBnb/BuckSample](https://github.com/airbnb/BuckSample/) the foundational work, which this project is built on
+1. [Uber's Plugin Blog Post](https://eng.uber.com/plugins/) "Engineering Scalable, Isolated Mobile Features with Plugins at Uber" - [Brian Attwell](https://github.com/AttwellBrian)
 1. [Uber/RIBs](https://github.com/uber/RIBs) • A core framework shown in this project
 1. [Uber/Needle](https://github.com/uber/Needle) • A core framework shown in this project
 1. https://www.youtube.com/watch?v=8OF7L3SdY5U "Fast reliable Swift builds with Buck" - Robbert van Ginkel
