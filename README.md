@@ -1,6 +1,9 @@
 # example-buck-ribs-needle
 This repo shows how to build an iOS applications using Buck, RIBs, and Needle. Big thanks to the AirBnB team for their work on [BuckSample](https://github.com/airbnb/BuckSample), without this project, this work wouldn't be possible.
 
+## Documentation
+To get started with this project, I'd recommend reviewing the [RIBs documentation](https://github.com/uber/RIBs/wiki) along with this project's [documentation](https://github.com/Angel-Cortez/example-buck-ribs-needle/wiki). This project implements both the [RIBs](https://github.com/uber/RIBs) and [Needle](https://github.com/uber/Needle) frameworks, along with showing an example of a plugin.
+
 
 ### To Install
 
